@@ -13,7 +13,8 @@ if (isset($_POST['theme'])) {
 }
 
 $message = "";
-if (isset($_POST["giris"])) {
+if (isset($_POST["giris"])) 
+{
     $uye_mail = $_POST["uye_mail"];
     $uye_sifre = $_POST["uye_sifre"];
 
@@ -23,19 +24,26 @@ if (isset($_POST["giris"])) {
     $stmt->execute();
     $result = $stmt->get_result();
 
-    if ($result->num_rows === 1) {
+    if ($result->num_rows === 1) 
+    {
         $user = $result->fetch_assoc();
-        if (password_verify($uye_sifre, $user['uye_sifre'])) {
+        if (password_verify($uye_sifre, $user['uye_sifre'])) 
+        {
             $_SESSION["uye_id"] = $user["uye_id"];
             $_SESSION["uye_adi"] = $user["uye_adi"];
             $_SESSION["uye_soyadi"] = $user["uye_soyadi"];
             $_SESSION["uye_mail"] = $user["uye_mail"];
+            $_SESSION["giris_basarili"] = true; //DENEME
             header("Location: anaSayfa.php");
             exit;
-        } else {
+        } 
+        else 
+        {
             $message = $language === 'tr' ? "Şifre yanlış." : "Incorrect password.";
         }
-    } else {
+    } 
+    else 
+    {
         $message = $language === 'tr' ? "Kullanıcı bulunamadı." : "User not found.";
     }
     $stmt->close();
@@ -50,7 +58,8 @@ if (isset($_POST["giris"])) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    body {
+    body 
+    {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
       background-color: <?= $theme === 'dark' ? '#121212' : '#f0f0f0' ?>;
@@ -58,7 +67,8 @@ if (isset($_POST["giris"])) {
       transition: background-color 0.3s, color 0.3s;
     }
 
-    header {
+    header 
+    {
       background-color: <?= $theme === 'dark' ? '#1e1e1e' : '#fff' ?>;
       padding: 20px 50px;
       display: flex;
@@ -68,22 +78,26 @@ if (isset($_POST["giris"])) {
       flex-wrap: wrap;
     }
 
-    .logo {
+    .logo 
+    {
       font-size: 24px;
       font-weight: bold;
       color: #f47c2c;
       text-decoration: none;
     }
 
-    .logo:hover {
+    .logo:hover 
+    {
       opacity: 0.8;
     }
 
-    .menu form {
+    .menu form 
+    {
       display: inline;
     }
 
-    .menu button {
+    .menu button 
+    {
       padding: 15px 20px;
       border: 1px solid #f47c2c;
       background-color: transparent;
@@ -92,19 +106,22 @@ if (isset($_POST["giris"])) {
       cursor: pointer;
     }
 
-    .menu button:hover {
+    .menu button:hover 
+    {
       background-color: #f47c2c;
       color: #000;
     }
 
-    .main {
+    .main 
+    {
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 80px 20px;
     }
 
-    .login-box {
+    .login-box 
+    {
       margin-top: 65px;
       background-color: <?= $theme === 'dark' ? '#1e1e1e' : '#fff' ?>;
       border: 5px solid <?= $theme === 'dark' ? '#333' : '#ccc' ?>;
@@ -115,14 +132,16 @@ if (isset($_POST["giris"])) {
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
 
-    .login-box h2 {
+    .login-box h2 
+    {
       margin-bottom: 25px;
       color: #f47c2c;
       text-align: center;
     }
 
     .login-box input[type="email"],
-    .login-box input[type="password"] {
+    .login-box input[type="password"] 
+    {
       width: 94%;
       padding: 12px;
       margin: 10px 0;
@@ -132,7 +151,8 @@ if (isset($_POST["giris"])) {
       color: <?= $theme === 'dark' ? '#fff' : '#000' ?>;
     }
 
-    .login-box button {
+    .login-box button 
+    {
       width: 100%;
       padding: 12px;
       background-color: #f47c2c;
@@ -143,11 +163,13 @@ if (isset($_POST["giris"])) {
       margin-top: 10px;
     }
 
-    .login-box button:hover {
+    .login-box button:hover 
+    {
       background-color: #da6d23;
     }
 
-    .login-box a {
+    .login-box a 
+    {
       display: block;
       text-align: center;
       margin-top: 15px;
@@ -155,11 +177,13 @@ if (isset($_POST["giris"])) {
       text-decoration: none;
     }
 
-    .login-box a:hover {
+    .login-box a:hover 
+    {
       text-decoration: underline;
     }
 
-    .error {
+    .error 
+    {
       background-color: #ffcccc;
       color: #900;
       padding: 10px;
@@ -168,7 +192,8 @@ if (isset($_POST["giris"])) {
       text-align: center;
     }
 
-    footer {
+    footer 
+    {
       background-color: <?= $theme === 'dark' ? '#1e1e1e' : '#fff' ?>;
       color: <?= $theme === 'dark' ? '#aaa' : '#333' ?>;
       text-align: center;

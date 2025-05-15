@@ -4,7 +4,8 @@ require_once("connection.php");
 
 // Giriş yapılmış mı kontrolü
 if (!isset($_SESSION['uye_id'])) {
-    die("Oturum oluşturmak için giriş yapmalısınız.");
+    echo "<script>alert('Oturum Başlatmak için Önce Giriş Yapmalısınız!!!'); window.location.href = 'anasayfa.php';</script>";
+    exit();
 }
 
 $createdBy = $_SESSION['uye_id']; // oturumu oluşturan kullanıcı

@@ -15,7 +15,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
-    echo "Geçersiz oturum kodu.";
+    echo "<script>alert('GEÇERSİZ OTURUM KODU!!!'); window.location.href = 'anasayfa.php';</script>";
     exit;
 }
 
