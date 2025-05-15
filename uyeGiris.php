@@ -57,6 +57,7 @@ if (isset($_POST["giris"]))
   <title>QuestionLive - <?= $language === 'tr' ? 'Giriş Yap' : 'Login' ?></title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body 
     {
@@ -69,8 +70,8 @@ if (isset($_POST["giris"]))
 
     header 
     {
-      background-color: <?= $theme === 'dark' ? '#1e1e1e' : '#fff' ?>;
-      padding: 20px 50px;
+      background-color: <?= $theme === 'dark' ? '#2b3741' : '#fff' ?>;
+      padding: 30px 50px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -80,10 +81,18 @@ if (isset($_POST["giris"]))
 
     .logo 
     {
-      font-size: 24px;
+      display: flex;
+      align-items: center;
+      font-size: 30px;
       font-weight: bold;
       color: #f47c2c;
-      text-decoration: none;
+    }
+
+    .logo-icon 
+    {
+      font-size: 36px;
+      margin-right: 12px;
+      line-height: 1;
     }
 
     .logo:hover 
@@ -98,8 +107,8 @@ if (isset($_POST["giris"]))
 
     .menu button 
     {
-      padding: 15px 20px;
-      border: 1px solid #f47c2c;
+      padding: 7px 14px;
+      border: 2px solid #f47c2c;
       background-color: transparent;
       color: #f47c2c;
       border-radius: 6px;
@@ -110,6 +119,15 @@ if (isset($_POST["giris"]))
     {
       background-color: #f47c2c;
       color: #000;
+    }
+
+    .language-switch, .theme-switch 
+    {
+      background: none;
+      color: #f47c2c;
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
     }
 
     .main 
@@ -194,11 +212,11 @@ if (isset($_POST["giris"]))
 
     footer 
     {
-      background-color: <?= $theme === 'dark' ? '#1e1e1e' : '#fff' ?>;
-      color: <?= $theme === 'dark' ? '#aaa' : '#333' ?>;
+      background-color: <?= $theme === 'dark' ? '#2b3741' : '#fff' ?>;
+      color: <?= $theme === 'dark' ? '#da6d23' : '#333' ?>;
       text-align: center;
       padding: 30px 10px;
-      margin-top: 80px;
+      margin-top: 100px;
     }
   </style>
 </head>
@@ -206,16 +224,19 @@ if (isset($_POST["giris"]))
 
 <!-- HEADER -->
 <header>
-  <a href="anaSayfa.php" class="logo"><i class="fa-solid fa-block-question"></i> QuestionLive</a>
+  <div class="logo">
+    <img src="https://cdn.creazilla.com/emojis/49577/monkey-emoji-clipart-xl.png" width="55px;" height="55  px;" class="logo-icon" style="margin-left: 50px;"/>
+    <span class="logo-text">QuestionLive</span>
+  </div>
   <div class="menu">
-    <form action="" method="post" style="display:inline;">
-      <button type="submit" name="language" value="<?= $language === 'tr' ? 'en' : 'tr' ?>">
-        <i class="fas fa-language"></i>
+    <form action="" method="post">
+      <button type="submit" name="language" value="<?= $language === 'tr' ? 'en' : 'tr' ?>" class="language-switch">
+        <?= '🌍​' ?>
       </button>
     </form>
-    <form action="" method="post" style="display:inline;">
-      <button type="submit" name="theme" value="<?= $theme === 'dark' ? 'light' : 'dark' ?>">
-        <i class="<?= $theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon' ?>"></i>
+    <form action="" method="post">
+      <button type="submit" name="theme" value="<?= $theme === 'dark' ? 'light' : 'dark' ?>" class="theme-switch">
+        <?= $theme === 'dark' ? '🌞' : '🌙' ?>
       </button>
     </form>
   </div>
@@ -233,8 +254,8 @@ if (isset($_POST["giris"]))
       <input type="password" name="uye_sifre" placeholder="<?= $language === 'tr' ? 'Şifreniz' : 'Your password' ?>" required>
       <button type="submit" name="giris"><?= $language === 'tr' ? 'Giriş Yap' : 'Login' ?></button>
     </form>
-    <a href="uyeKayit.php"><?= $language === 'tr' ? 'Hesabınız yok mu? Kayıt olun' : "Don't have an account? Sign up" ?></a>
-    <a href="anaSayfa.php"><?= $language === 'tr' ? 'Ana Sayfaya Dön' : 'Back to Home' ?></a>
+    <a href="uyeKayit.php" style="margin-top:25px"><?= $language === 'tr' ? 'Hesabınız yok mu? Kayıt olun' : "Don't have an account? Sign up" ?></a>
+    <a href="anaSayfa.php" style="margin-top:25px"><?= $language === 'tr' ? 'Ana Sayfaya Dön' : 'Back to Home' ?></a>
   </div>
 </div>
 
@@ -244,6 +265,19 @@ if (isset($_POST["giris"]))
   <p><?= $language === 'tr' ? 'E-posta: destek@questionlive.com' : 'Email: support@questionlive.com' ?></p>
   <p><?= $language === 'tr' ? 'Telefon: +90 555 123 4567' : 'Phone: +90 555 123 4567' ?></p>
   <p><?= $language === 'tr' ? 'Adres: İstanbul, Türkiye' : 'Address: Istanbul, Turkey' ?></p>
+<div>
+    <a href="https://x.com/cristiano" target="_blank" style="margin-right: 20px;">
+      <i class="fab fa-x-twitter" style="font-size: 40px; color:rgb(0, 0, 0);"></i>
+    </a>
+
+    <a href="https://www.instagram.com/cristiano" target="_blank" style="margin-right: 20px;">
+      <i class="fab fa-instagram" style="font-size: 40px; color: #E4405F;"></i>
+    </a>
+
+    <a href="https://www.facebook.com/cristiano" target="_blank">
+      <i class="fab fa-facebook" style="font-size: 40px; color: #1877F2;"></i>
+    </a>
+  </div>
 </footer>
 
 </body>

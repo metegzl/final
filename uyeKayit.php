@@ -3,19 +3,22 @@ session_start();
 require_once("connection.php");
 
 $language = isset($_SESSION['language']) ? $_SESSION['language'] : 'tr';
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['language'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['language'])) 
+{
     $language = $_SESSION['language'] = $_POST['language'];
 }
 
 $theme = isset($_SESSION['theme']) ? $_SESSION['theme'] : 'dark';
-if (isset($_POST['theme'])) {
+if (isset($_POST['theme'])) 
+{
     $theme = $_SESSION['theme'] = $_POST['theme'];
 }
 
 $message = "";
 $messageType = "";
 
-if (isset($_POST["kaydet"])) {
+if (isset($_POST["kaydet"])) 
+{
     $uye_adi = $_POST["uye_adi"];
     $uye_soyadi = $_POST["uye_soyadi"];
     $uye_mail = $_POST["uye_mail"];
@@ -28,20 +31,25 @@ if (isset($_POST["kaydet"])) {
     $stmt->execute();
     $result = $stmt->get_result();
 
-    if ($result->num_rows > 0) {
+    if ($result->num_rows > 0) 
+    {
         $message = "Bu kullanıcı zaten mevcut.";
         $messageType = "error";
-    } else {
+    } 
+    else 
+    {
         // Yeni kullanıcı ekleme
         $sql = "INSERT INTO uyeler (uye_adi, uye_soyadi, uye_mail, uye_sifre)
                 VALUES (?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ssss", $uye_adi, $uye_soyadi, $uye_mail, $uye_sifre);
 
-        if ($stmt->execute()) {
+        if ($stmt->execute()) 
+        {
             $message = "Kullanıcı başarıyla eklendi.";
             $messageType = "success";
-        } else {
+        } else 
+        {
             $message = "Hata: " . $stmt->error;
             $messageType = "error";
         }
@@ -58,8 +66,10 @@ if (isset($_POST["kaydet"])) {
   <title>QuestionLive - <?= $language === 'tr' ? 'Kayıt Ol' : 'Sign Up' ?></title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    body {
+    body 
+    {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
       background-color: <?= $theme === 'dark' ? '#121212' : '#f0f0f0' ?>;
@@ -67,9 +77,10 @@ if (isset($_POST["kaydet"])) {
       transition: background-color 0.3s, color 0.3s;
     }
 
-    header {
-      background-color: <?= $theme === 'dark' ? '#1e1e1e' : '#fff' ?>;
-      padding: 20px 50px;
+    header 
+    {
+      background-color: <?= $theme === 'dark' ? '#2b3741' : '#fff' ?>;
+      padding: 30px 50px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -77,43 +88,67 @@ if (isset($_POST["kaydet"])) {
       flex-wrap: wrap;
     }
 
-    .logo {
-      font-size: 24px;
+    .logo 
+    {
+      display: flex;
+      align-items: center;
+      font-size: 30px;
       font-weight: bold;
       color: #f47c2c;
-      text-decoration: none;
     }
 
-    .logo:hover {
+    .logo-icon 
+    {
+      font-size: 36px;
+      margin-right: 12px;
+      line-height: 1;
+    }
+
+    .logo:hover 
+    {
       opacity: 0.8;
     }
 
-    .menu form {
+    .menu form 
+    {
       display: inline;
     }
 
-    .menu button {
-      padding: 15px 20px;
-      border: 1px solid #f47c2c;
+    .menu button 
+    {
+      padding: 7px 14px;
+      border: 2px solid #f47c2c;
       background-color: transparent;
       color: #f47c2c;
       border-radius: 6px;
       cursor: pointer;
     }
 
-    .menu button:hover {
+    .menu button:hover 
+    {
       background-color: #f47c2c;
       color: #000;
     }
 
-    .main {
+    .language-switch, .theme-switch 
+    {
+      background: none;
+      color: #f47c2c;
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .main 
+    {
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 80px 20px;
     }
 
-    .login-box {
+    .login-box 
+    {
       margin-top: 65px;
       background-color: <?= $theme === 'dark' ? '#1e1e1e' : '#fff' ?>;
       border: 5px solid <?= $theme === 'dark' ? '#333' : '#ccc' ?>;
@@ -124,7 +159,8 @@ if (isset($_POST["kaydet"])) {
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
 
-    .login-box h2 {
+    .login-box h2 
+    {
       margin-bottom: 25px;
       color: #f47c2c;
       text-align: center;
@@ -144,7 +180,8 @@ if (isset($_POST["kaydet"])) {
       color: <?= $theme === 'dark' ? '#fff' : '#000' ?>;
     }
 
-    .login-box button {
+    .login-box button 
+    {
       width: 100%;
       padding: 12px;
       background-color: #f47c2c;
@@ -155,11 +192,13 @@ if (isset($_POST["kaydet"])) {
       margin-top: 10px;
     }
 
-    .login-box button:hover {
+    .login-box button:hover 
+    {
       background-color: #da6d23;
     }
 
-    .login-box a {
+    .login-box a 
+    {
       display: block;
       text-align: center;
       margin-top: 15px;
@@ -167,11 +206,13 @@ if (isset($_POST["kaydet"])) {
       text-decoration: none;
     }
 
-    .login-box a:hover {
+    .login-box a:hover 
+    {
       text-decoration: underline;
     }
 
-    .error {
+    .error 
+    {
       background-color: #ffcccc;
       color: #900;
       padding: 10px;
@@ -180,12 +221,13 @@ if (isset($_POST["kaydet"])) {
       text-align: center;
     }
 
-    footer {
-      background-color: <?= $theme === 'dark' ? '#1e1e1e' : '#fff' ?>;
-      color: <?= $theme === 'dark' ? '#aaa' : '#333' ?>;
+    footer 
+    {
+      background-color: <?= $theme === 'dark' ? '#2b3741' : '#fff' ?>;
+      color: <?= $theme === 'dark' ? '#da6d23' : '#333' ?>;
       text-align: center;
       padding: 30px 10px;
-      margin-top: 80px;
+      margin-top: 100px;
     }
   </style>
 </head>
@@ -193,16 +235,19 @@ if (isset($_POST["kaydet"])) {
 
 <!-- HEADER -->
 <header>
-  <a href="anaSayfa.php" class="logo"><i class="fa-solid fa-block-question"></i> QuestionLive</a>
+  <div class="logo">
+    <img src="https://cdn.creazilla.com/emojis/49577/monkey-emoji-clipart-xl.png" width="55px;" height="55  px;" class="logo-icon" style="margin-left: 50px;"/>
+    <span class="logo-text">QuestionLive</span>
+  </div>
   <div class="menu">
-    <form action="" method="post" style="display:inline;">
-      <button type="submit" name="language" value="<?= $language === 'tr' ? 'en' : 'tr' ?>">
-        <i class="fas fa-language"></i>
+    <form action="" method="post">
+      <button type="submit" name="language" value="<?= $language === 'tr' ? 'en' : 'tr' ?>" class="language-switch">
+        <?= '🌍​' ?>
       </button>
     </form>
-    <form action="" method="post" style="display:inline;">
-      <button type="submit" name="theme" value="<?= $theme === 'dark' ? 'light' : 'dark' ?>">
-        <i class="<?= $theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon' ?>"></i>
+    <form action="" method="post">
+      <button type="submit" name="theme" value="<?= $theme === 'dark' ? 'light' : 'dark' ?>" class="theme-switch">
+        <?= $theme === 'dark' ? '🌞' : '🌙' ?>
       </button>
     </form>
   </div>
@@ -233,6 +278,19 @@ if (isset($_POST["kaydet"])) {
   <p><?= $language === 'tr' ? 'E-posta: destek@questionlive.com' : 'Email: support@questionlive.com' ?></p>
   <p><?= $language === 'tr' ? 'Telefon: +90 555 123 4567' : 'Phone: +90 555 123 4567' ?></p>
   <p><?= $language === 'tr' ? 'Adres: İstanbul, Türkiye' : 'Address: Istanbul, Turkey' ?></p>
+<div>
+    <a href="https://x.com/cristiano" target="_blank" style="margin-right: 20px;">
+      <i class="fab fa-x-twitter" style="font-size: 40px; color:rgb(0, 0, 0);"></i>
+    </a>
+
+    <a href="https://www.instagram.com/cristiano" target="_blank" style="margin-right: 20px;">
+      <i class="fab fa-instagram" style="font-size: 40px; color: #E4405F;"></i>
+    </a>
+
+    <a href="https://www.facebook.com/cristiano" target="_blank">
+      <i class="fab fa-facebook" style="font-size: 40px; color: #1877F2;"></i>
+    </a>
+  </div>
 </footer>
 
 <?php if ($message): ?>

@@ -36,34 +36,37 @@ if (isset($_SESSION["giris_basarili"]) && $_SESSION["giris_basarili"] === true)
     {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: <?= $theme === 'dark' ? '#121212' : '#f0f0f0' ?>;
+      background-color: <?= $theme === 'dark' ? '#908f8f' : '#f0f0f0' ?>;
       color: <?= $theme === 'dark' ? '#fff' : '#000' ?>;
       transition: background-color 0.3s, color 0.3s;
     }
 
-    header {
-  background-color: <?= $theme === 'dark' ? '#2b3741' : '#fff' ?>;
-  padding: 30px 50px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid <?= $theme === 'dark' ? '#333' : '#ccc' ?>;
-  flex-wrap: wrap;
-}
+    header 
+    {
+      background-color: <?= $theme === 'dark' ? '#2b3741' : '#fff' ?>;
+      padding: 30px 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid <?= $theme === 'dark' ? '#333' : '#ccc' ?>;
+      flex-wrap: wrap;
+    }
 
-.logo {
-  display: flex;
-  align-items: center;
-  font-size: 30px;
-  font-weight: bold;
-  color: #f47c2c;
-}
+    .logo 
+    {
+      display: flex;
+      align-items: center;
+      font-size: 30px;
+      font-weight: bold;
+      color: #f47c2c;
+    }
 
-.logo-icon {
-  font-size: 36px;
-  margin-right: 12px;
-  line-height: 1;
-}
+    .logo-icon 
+    {
+      font-size: 36px;
+      margin-right: 12px;
+      line-height: 1;
+    }
 
     .menu 
     {
@@ -308,20 +311,21 @@ if (isset($_SESSION["giris_basarili"]) && $_SESSION["giris_basarili"] === true)
 
     <form action="" method="post">
       <button type="submit" name="language" value="<?= $language === 'tr' ? 'en' : 'tr' ?>" class="language-switch">
-        <i class="fas fa-language"></i>
+        <?= '🌍​' ?>
       </button>
     </form>
     <form action="" method="post">
       <button type="submit" name="theme" value="<?= $theme === 'dark' ? 'light' : 'dark' ?>" class="theme-switch">
-        <i class="<?= $theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon' ?>"></i>
+        <?= $theme === 'dark' ? '🌞' : '🌙' ?>
+
       </button>
     </form>
   </div>
 </header>
 
 <div class="main">
-  <h1><?= $language === 'tr' ? 'Dijital etkileşimin yeni boyutunu keşfet' : 'Discover the new dimension of digital interaction' ?></h1>
-  <p><?= $language === 'tr' ? 'Etkinliklerde, işletmelerde ve eğitim ortamlarında anonim geri bildirim almanın en kolay yolu.' : 'The easiest way to receive anonymous feedback at events, businesses, and educational environments.' ?></p>
+  <h1><?= $language === 'tr' ? 'Dijital Etkileşimin Yeni Boyutunu Keşfet' : 'Discover the new dimension of digital interaction' ?></h1>
+  <p style="color: #333333;"><?= $language === 'tr' ? 'Etkinliklerde, işletmelerde ve eğitim ortamlarında anonim geri bildirim almanın en kolay yolu.' : 'The easiest way to receive anonymous feedback at events, businesses, and educational environments.' ?></p>
   <form action="#">
   <button class="discover-btn" style="margin-top: 35px;"><?= $language === 'tr' ? 'Olanakları Keşfet' : 'Discover the possibilities' ?></button>
   </form>

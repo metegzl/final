@@ -2,15 +2,13 @@
 session_start();
 require_once("connection.php");
 
-// Giriş yapılmış mı kontrolü
 if (!isset($_SESSION['uye_id'])) {
     echo "<script>alert('Oturum Başlatmak için Önce Giriş Yapmalısınız!!!'); window.location.href = 'anasayfa.php';</script>";
     exit();
 }
 
-$createdBy = $_SESSION['uye_id']; // oturumu oluşturan kullanıcı
+$createdBy = $_SESSION['uye_id'];
 
-// 6 haneli random session kodu oluştur
 function generateSessionCode($length = 6) {
     $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     $code = '';
@@ -20,18 +18,24 @@ function generateSessionCode($length = 6) {
     return $code;
 }
 
-$sessionCode = generateSessionCode();
+// Oturum başlatıldı mı kontrolü
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $chatwall = isset($_POST['chatwall']) ? 1 : 0;
+    $quiz = isset($_POST['quiz']) ? 1 : 0;
+    $panic = isset($_POST['panic']) ? 1 : 0;
 
-// Veritabanına kayıt et (created_by eklendi)
-$stmt = $conn->prepare("INSERT INTO sessions (session_code, created_by) VALUES (?, ?)");
-$stmt->bind_param("si", $sessionCode, $createdBy);
+    $sessionCode = generateSessionCode();
 
-if (!$stmt->execute()) {
-    die("Veritabanına kayıt yapılamadı: " . $stmt->error);
+    $stmt = $conn->prepare("INSERT INTO sessions (session_code, created_by, chatwall, quiz, panic) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("siiii", $sessionCode, $createdBy, $chatwall, $quiz, $panic);
+
+    if (!$stmt->execute()) {
+        die("Veritabanına kayıt yapılamadı: " . $stmt->error);
+    }
+
+    $stmt->close();
+    $conn->close();
 }
-
-$stmt->close();
-$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -90,6 +94,23 @@ $conn->close();
             border-radius: 8px;
             color: #333;
         }
+
+        .button {
+            display: block;
+            margin: 30px auto 0;
+            padding: 10px 20px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .end-button {
+            background-color: #d9534f;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -97,39 +118,44 @@ $conn->close();
     <h1 style="font-size: 185%;">Choose your features</h1>
     <p>Select which features you want to enable for your session:</p>
 
-    <div class="feature">
-        <input type="checkbox" id="Chatwall" checked enabled>
-        <div>
-            <h3 style="font-size: 160%;">Chatwall</h3>
-            <p>Participants can communicate issues like "too fast", "example please", etc.</p>
+    <form method="post">
+        <div class="feature">
+            <input type="checkbox" id="chatwall" name="chatwall" checked>
+            <div>
+                <h3 style="font-size: 160%;">Chatwall</h3>
+                <p>Participants can communicate issues like "too fast", "example please", etc.</p>
+            </div>
         </div>
-    </div>
 
-    <div class="feature">
-        <input type="checkbox" id="quiz" checked enabled>
-        <div>
-            <h3 style="font-size: 160%;">Quiz</h3>
-            <p>Enables the speaker to direct a single-choice question to the audience.</p>
+        <div class="feature">
+            <input type="checkbox" id="quiz" name="quiz" checked>
+            <div>
+                <h3 style="font-size: 160%;">Quiz</h3>
+                <p>Enables the speaker to direct a single-choice question to the audience.</p>
+            </div>
         </div>
-    </div>
 
-    <div class="feature">
-        <input type="checkbox" id="panic" checked enabled>
-        <div>
-            <h3 style="font-size: 160%;">Panic-Buttons</h3>
-            <p>Participants can communicate issues like "too fast", "example please", etc.</p>
+        <div class="feature">
+            <input type="checkbox" id="panic" name="panic" checked>
+            <div>
+                <h3 style="font-size: 160%;">Panic-Buttons</h3>
+                <p>Participants can communicate issues like "too fast", "example please", etc.</p>
+            </div>
         </div>
-    </div>
 
-    <div class="code-box">
-        Session Code: <?php echo $sessionCode; ?>
-    </div>
+        <button type="submit" class="button">Oturumu Başlat</button>
+    </form>
+
+    <?php if ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
+        <div class="code-box">
+            Session Code: <?php echo htmlspecialchars($sessionCode); ?>
+        </div>
+
+        <form action="endSession.php" method="post" style="text-align: center;">
+            <input type="hidden" name="session_code" value="<?php echo htmlspecialchars($sessionCode); ?>">
+            <button type="submit" class="button end-button">End Session</button>
+        </form>
+    <?php endif; ?>
 </div>
-<form action="endSession.php" method="post" style="margin-top: 20px; text-align: center;">
-    <input type="hidden" name="session_code" value="<?php echo $sessionCode; ?>">
-    <button type="submit" style="padding: 10px 20px; background-color: #d9534f; color: white; border: none; border-radius: 6px; cursor: pointer;">
-        End Session
-    </button>
-</form>
 </body>
 </html>
