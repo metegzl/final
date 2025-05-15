@@ -223,7 +223,7 @@ if (isset($_POST['theme'])) {
       <form action="profil.php" method="get">
         <button type="submit"><?= $language === 'tr' ? 'Profilim' : 'My Profile' ?> (<?= htmlspecialchars($_SESSION['uye_adi']) ?>)</button>
       </form>
-      <form action="cikis.php" method="post">
+      <form action="logout.php" method="post">
         <button type="submit"><?= $language === 'tr' ? 'Çıkış Yap' : 'Logout' ?></button>
       </form>
     <?php else: ?>

@@ -17,32 +17,31 @@ if (isset($_POST["giris"])) {
     $uye_mail = $_POST["uye_mail"];
     $uye_sifre = $_POST["uye_sifre"];
 
-    try {
-        $sql = "SELECT * FROM uyeler WHERE uye_mail = :uye_mail";
-        $query = $connection->prepare($sql);
-        $query->bindParam(':uye_mail', $uye_mail);
-        $query->execute();
+    $sql = "SELECT * FROM uyeler WHERE uye_mail = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $uye_mail);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-        if ($query->rowCount() == 1) {
-            $user = $query->fetch(PDO::FETCH_ASSOC);
-            if (password_verify($uye_sifre, $user['uye_sifre'])) {
-                $_SESSION["uye_id"] = $user["uye_id"];
-                $_SESSION["uye_adi"] = $user["uye_adi"];
-                $_SESSION["uye_soyadi"] = $user["uye_soyadi"];
-                $_SESSION["uye_mail"] = $user["uye_mail"];
-                header("Location: anaSayfa.php");
-                exit;
-            } else {
-                $message = $language === 'tr' ? "Şifre yanlış." : "Incorrect password.";
-            }
+    if ($result->num_rows === 1) {
+        $user = $result->fetch_assoc();
+        if (password_verify($uye_sifre, $user['uye_sifre'])) {
+            $_SESSION["uye_id"] = $user["uye_id"];
+            $_SESSION["uye_adi"] = $user["uye_adi"];
+            $_SESSION["uye_soyadi"] = $user["uye_soyadi"];
+            $_SESSION["uye_mail"] = $user["uye_mail"];
+            header("Location: anaSayfa.php");
+            exit;
         } else {
-            $message = $language === 'tr' ? "Kullanıcı bulunamadı." : "User not found.";
+            $message = $language === 'tr' ? "Şifre yanlış." : "Incorrect password.";
         }
-    } catch (PDOException $e) {
-        $message = "Hata: " . $e->getMessage();
+    } else {
+        $message = $language === 'tr' ? "Kullanıcı bulunamadı." : "User not found.";
     }
+    $stmt->close();
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="<?= $language ?>">
 <head>
@@ -85,7 +84,7 @@ if (isset($_POST["giris"])) {
     }
 
     .menu button {
-      padding: 7px 14px;
+      padding: 15px 20px;
       border: 1px solid #f47c2c;
       background-color: transparent;
       color: #f47c2c;
@@ -106,24 +105,25 @@ if (isset($_POST["giris"])) {
     }
 
     .login-box {
+      margin-top: 65px;
       background-color: <?= $theme === 'dark' ? '#1e1e1e' : '#fff' ?>;
-      border: 1px solid <?= $theme === 'dark' ? '#333' : '#ccc' ?>;
-      border-radius: 10px;
-      padding: 40px;
+      border: 5px solid <?= $theme === 'dark' ? '#333' : '#ccc' ?>;
+      border-radius: 35px;
+      padding: 70px;
       width: 100%;
-      max-width: 400px;
+      max-width: 385px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
 
     .login-box h2 {
-      margin-bottom: 20px;
+      margin-bottom: 25px;
       color: #f47c2c;
       text-align: center;
     }
 
     .login-box input[type="email"],
     .login-box input[type="password"] {
-      width: 100%;
+      width: 94%;
       padding: 12px;
       margin: 10px 0;
       border-radius: 6px;
