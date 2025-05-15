@@ -290,10 +290,10 @@ if (isset($_SESSION["giris_basarili"]) && $_SESSION["giris_basarili"] === true)
   <div class="menu">
     <form action="joinSession.php" method="get">
       <input type="text" name="code" placeholder="<?= $language === 'tr' ? 'Oturum Kodu ...' : 'Session Code ...' ?>" required>
-      <button type="submit"><?= $language === 'tr' ? 'Katıl' : 'Join' ?></button>
+      <button type="submit" style="margin-right: 5px;" ><?= $language === 'tr' ? 'Katıl' : 'Join' ?></button>
     </form>
     <form action="createSession.php" method="get">
-      <button type="submit"><?= $language === 'tr' ? 'Oturum Oluştur' : 'Create Session' ?></button>
+      <button type="submit" style="margin-right: 5px;"><?= $language === 'tr' ? 'Oturum Oluştur' : 'Create Session' ?></button>
     </form>
     
     <?php if (isset($_SESSION['uye_adi'])): ?>

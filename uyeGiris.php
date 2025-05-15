@@ -262,7 +262,7 @@ if (isset($_POST["giris"]))
 <!-- FOOTER -->
 <footer>
   <h3><?= $language === 'tr' ? 'İletişim' : 'Contact' ?></h3>
-  <p><?= $language === 'tr' ? 'E-posta: destek@questionlive.com' : 'Email: support@questionlive.com' ?></p>
+  <p><?= $language === 'tr' ? 'E-posta: destek@questionlive.com' : 'Email: destek@questionlive.com' ?></p>
   <p><?= $language === 'tr' ? 'Telefon: +90 555 123 4567' : 'Phone: +90 555 123 4567' ?></p>
   <p><?= $language === 'tr' ? 'Adres: İstanbul, Türkiye' : 'Address: Istanbul, Turkey' ?></p>
 <div>

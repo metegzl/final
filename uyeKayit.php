@@ -33,10 +33,10 @@ if (isset($_POST["kaydet"]))
 
     if ($result->num_rows > 0) 
     {
-        $message = "Bu kullanıcı zaten mevcut.";
+        $message = "Bu Kullanıcı Zaten Mevcut.";
         $messageType = "error";
     } 
-    else 
+    else
     {
         // Yeni kullanıcı ekleme
         $sql = "INSERT INTO uyeler (uye_adi, uye_soyadi, uye_mail, uye_sifre)
@@ -48,7 +48,8 @@ if (isset($_POST["kaydet"]))
         {
             $message = "Kullanıcı başarıyla eklendi.";
             $messageType = "success";
-        } else 
+        } 
+        else 
         {
             $message = "Hata: " . $stmt->error;
             $messageType = "error";
@@ -213,13 +214,18 @@ if (isset($_POST["kaydet"]))
 
     .error 
     {
-      background-color: #ffcccc;
-      color: #900;
-      padding: 10px;
-      margin-top: 10px;
+      background-color:rgb(255, 0, 0);
+      color: #000000;
+      padding: 10px 20px;
+      margin: 20px auto; /* Ortalamak için */
       border-radius: 6px;
       text-align: center;
+      width: fit-content; /* İçeriğe göre genişlik */
+      max-width: 90%; /* Taşmayı önlemek için */
+      box-shadow: 0 2px 6px rgba(255, 0, 0, 0.1); /* Daha hoş görünüm */
+      font-size: 14px;
     }
+
 
     footer 
     {
@@ -232,7 +238,11 @@ if (isset($_POST["kaydet"]))
   </style>
 </head>
 <body>
-
+<?php if (isset($message)): ?>
+    <div class="message <?= $messageType ?>">
+        <?= htmlspecialchars($message) ?>
+    </div>
+<?php endif; ?>
 <!-- HEADER -->
 <header>
   <div class="logo">
@@ -275,7 +285,7 @@ if (isset($_POST["kaydet"]))
 <!-- FOOTER -->
 <footer>
   <h3><?= $language === 'tr' ? 'İletişim' : 'Contact' ?></h3>
-  <p><?= $language === 'tr' ? 'E-posta: destek@questionlive.com' : 'Email: support@questionlive.com' ?></p>
+  <p><?= $language === 'tr' ? 'E-posta: destek@questionlive.com' : 'Email: destek@questionlive.com' ?></p>
   <p><?= $language === 'tr' ? 'Telefon: +90 555 123 4567' : 'Phone: +90 555 123 4567' ?></p>
   <p><?= $language === 'tr' ? 'Adres: İstanbul, Türkiye' : 'Address: Istanbul, Turkey' ?></p>
 <div>
