@@ -251,7 +251,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <a href="anasayfa.php" class="logo-button">QuestionLive</a>
         </div>
         <h1 style="margin-right: 290px;">Hoş Geldiniz, <?= htmlspecialchars($uye['uye_adi'] . ' ' . $uye['uye_soyadi']) ?></h1>
-        <a href="cikis.php" class="logout"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
+        <a href="logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
     </header>
 
     <div class="container">

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Panic Feedback</title>
@@ -36,6 +37,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="button-grid">
         <button class="panic-button" onclick="sendFeedback('too_fast')">Too fast</button>
@@ -55,21 +57,22 @@
             }
 
             fetch('submit_panic.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `session_id=${encodeURIComponent(sessionId)}&feedback_type=${encodeURIComponent(type)}`
-            })
-            .then(response => response.text())
-            .then(data => {
-                alert("Geri bildiriminiz gönderildi!");
-            })
-            .catch(error => {
-                console.error('Hata:', error);
-                alert("Gönderim sırasında bir hata oluştu.");
-            });
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `session_id=${encodeURIComponent(sessionId)}&feedback_type=${encodeURIComponent(type)}`
+                })
+                .then(response => response.text())
+                .then(data => {
+                    alert("Geri bildiriminiz gönderildi!");
+                })
+                .catch(error => {
+                    console.error('Hata:', error);
+                    alert("Gönderim sırasında bir hata oluştu.");
+                });
         }
     </script>
 </body>
+
 </html>

@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <head>
     <meta charset="UTF-8">
-    <title>Create Session</title>
+    <title>Oturum Oluştur</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -151,12 +151,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <?php if ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
             <div class="code-box">
-                Session Code: <?php echo htmlspecialchars($sessionCode); ?>
+                Oturum Kodu: <?php echo htmlspecialchars($sessionCode); ?>
             </div>
 
             <form action="endSession.php" method="post" style="text-align: center;">
                 <input type="hidden" name="session_code" value="<?php echo htmlspecialchars($sessionCode); ?>">
-                <button type="submit" class="button end-button">End Session</button>
+                <button type="submit" class="button end-button">Oturumu Sonlandır</button>
             </form>
         <?php endif; ?>
     </div>
