@@ -250,7 +250,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <img src="https://cdn.creazilla.com/emojis/49577/monkey-emoji-clipart-xl.png" width="55px" height="55px" class="logo-icon" style="margin-left: 50px;" />
             <a href="anasayfa.php" class="logo-button">QuestionLive</a>
         </div>
-        <h1 style="margin-right: 250px;">Hoş Geldiniz, <?= htmlspecialchars($uye['uye_adi'] . ' ' . $uye['uye_soyadi']) ?></h1>
+        <h1 style="margin-right: 290px;">Hoş Geldiniz, <?= htmlspecialchars($uye['uye_adi'] . ' ' . $uye['uye_soyadi']) ?></h1>
         <a href="cikis.php" class="logout"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a>
     </header>
 
