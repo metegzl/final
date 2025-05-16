@@ -34,10 +34,10 @@ if (isset($_POST["giris"])) {
       header("Location: anaSayfa.php");
       exit;
     } else {
-      $message = $language === 'tr' ? "Şifre yanlış." : "Incorrect password.";
+      $message = $language === 'tr' ? "Şifre Hatalı!!" : "Incorrect password.";
     }
   } else {
-    $message = $language === 'tr' ? "Kullanıcı bulunamadı." : "User not found.";
+    $message = $language === 'tr' ? "E-posta Hatalı." : "Email is incorrect.";
   }
   $stmt->close();
 }
@@ -197,8 +197,8 @@ if (isset($_POST["giris"])) {
     }
 
     .error {
-      background-color: #ffcccc;
-      color: #900;
+      background-color: rgb(255, 35, 35);
+      color: rgb(0, 0, 0);
       padding: 10px;
       margin-top: 10px;
       border-radius: 6px;
