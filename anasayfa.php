@@ -33,13 +33,13 @@ if (isset($_SESSION["giris_basarili"]) && $_SESSION["giris_basarili"] === true) 
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: <?= $theme === 'dark' ? '#494A4B' : '#f0f0f0' ?>;
+      background-color: <?= $theme === 'dark' ? '#363636' : '#ffffe0' ?>;
       color: <?= $theme === 'dark' ? '#fff' : '#000' ?>;
       transition: background-color 0.3s, color 0.3s;
     }
 
     header {
-      background-color: <?= $theme === 'dark' ? '#001f24' : '#fff' ?>;
+      background-color: <?= $theme === 'dark' ? '#001f24' : '#2e8b57' ?>;
       padding: 30px 50px;
       display: flex;
       justify-content: space-between;
@@ -237,7 +237,7 @@ if (isset($_SESSION["giris_basarili"]) && $_SESSION["giris_basarili"] === true) 
     }
 
     footer {
-      background-color: <?= $theme === 'dark' ? '#001f24' : '#fff' ?>;
+      background-color: <?= $theme === 'dark' ? '#001f24' : '#2e8b57' ?>;
       color: <?= $theme === 'dark' ? '#da6d23' : '#333' ?>;
       text-align: center;
       padding: 30px 10px;
