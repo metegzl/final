@@ -56,13 +56,13 @@ if (isset($_POST["giris"])) {
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: <?= $theme === 'dark' ? '#121212' : '#f0f0f0' ?>;
+      background-color: <?= $theme === 'dark' ? '#121212' : '#ffffe0' ?>;
       color: <?= $theme === 'dark' ? '#fff' : '#000' ?>;
       transition: background-color 0.3s, color 0.3s;
     }
 
     header {
-      background-color: <?= $theme === 'dark' ? '#001f24' : '#fff' ?>;
+      background-color: <?= $theme === 'dark' ? '#001f24' : '#2e8b57' ?>;
       padding: 30px 50px;
       display: flex;
       justify-content: space-between;
@@ -143,7 +143,7 @@ if (isset($_POST["giris"])) {
 
     .login-box {
       margin-top: 65px;
-      background-color: <?= $theme === 'dark' ? '#1e1e1e' : '#fff' ?>;
+      background-color: <?= $theme === 'dark' ? '#1e1e1e' : '#eeeed1' ?>;
       border: 5px solid <?= $theme === 'dark' ? '#333' : '#ccc' ?>;
       border-radius: 35px;
       padding: 70px;
@@ -206,7 +206,7 @@ if (isset($_POST["giris"])) {
     }
 
     footer {
-      background-color: <?= $theme === 'dark' ? '#001f24' : '#fff' ?>;
+      background-color: <?= $theme === 'dark' ? '#001f24' : '#2e8b57' ?>;
       color: <?= $theme === 'dark' ? '#da6d23' : '#333' ?>;
       text-align: center;
       padding: 30px 10px;
