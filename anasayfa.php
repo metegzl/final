@@ -33,13 +33,13 @@ if (isset($_SESSION["giris_basarili"]) && $_SESSION["giris_basarili"] === true) 
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: <?= $theme === 'dark' ? '#908f8f' : '#f0f0f0' ?>;
+      background-color: <?= $theme === 'dark' ? '#494A4B' : '#f0f0f0' ?>;
       color: <?= $theme === 'dark' ? '#fff' : '#000' ?>;
       transition: background-color 0.3s, color 0.3s;
     }
 
     header {
-      background-color: <?= $theme === 'dark' ? '#2b3741' : '#fff' ?>;
+      background-color: <?= $theme === 'dark' ? '#001f24' : '#fff' ?>;
       padding: 30px 50px;
       display: flex;
       justify-content: space-between;
@@ -64,10 +64,10 @@ if (isset($_SESSION["giris_basarili"]) && $_SESSION["giris_basarili"] === true) 
 
     .logo-button {
       display: inline-block;
-      background-color: rgb(244, 124, 44);
+      background-color: rgba(244, 124, 44, 0.82);
 
       /* Buton rengi */
-      color: white;
+      color: whitesmoke;
       padding: 7.5px 20px;
       margin-left: 10px;
       text-decoration: none;
@@ -77,7 +77,7 @@ if (isset($_SESSION["giris_basarili"]) && $_SESSION["giris_basarili"] === true) 
     }
 
     .logo-button:hover {
-      background-color: rgb(155, 100, 0);
+      background-color: rgb(0, 62, 71);
     }
 
     .menu {
@@ -237,7 +237,7 @@ if (isset($_SESSION["giris_basarili"]) && $_SESSION["giris_basarili"] === true) 
     }
 
     footer {
-      background-color: <?= $theme === 'dark' ? '#2b3741' : '#fff' ?>;
+      background-color: <?= $theme === 'dark' ? '#001f24' : '#fff' ?>;
       color: <?= $theme === 'dark' ? '#da6d23' : '#333' ?>;
       text-align: center;
       padding: 30px 10px;
@@ -324,7 +324,7 @@ if (isset($_SESSION["giris_basarili"]) && $_SESSION["giris_basarili"] === true) 
 
   <div class="main">
     <h1><?= $language === 'tr' ? 'Dijital Etkileşimin Yeni Boyutunu Keşfet' : 'Discover the new dimension of digital interaction' ?></h1>
-    <p style="color: #333333;"><?= $language === 'tr' ? 'Etkinliklerde, işletmelerde ve eğitim ortamlarında anonim geri bildirim almanın en kolay yolu.' : 'The easiest way to receive anonymous feedback at events, businesses, and educational environments.' ?></p>
+    <p style="color: #f47c2c;"><?= $language === 'tr' ? 'Etkinliklerde, işletmelerde ve eğitim ortamlarında anonim geri bildirim almanın en kolay yolu.' : 'The easiest way to receive anonymous feedback at events, businesses, and educational environments.' ?></p>
     <form action="#">
       <button class="discover-btn" style="margin-top: 35px;"><?= $language === 'tr' ? 'Olanakları Keşfet' : 'Discover the possibilities' ?></button>
     </form>

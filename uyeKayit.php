@@ -83,7 +83,7 @@ if (isset($_POST["kaydet"])) {
     }
 
     header {
-      background-color: <?= $theme === 'dark' ? '#2b3741' : '#fff' ?>;
+      background-color: <?= $theme === 'dark' ? '#001f24' : '#fff' ?>;
       padding: 30px 50px;
       display: flex;
       justify-content: space-between;
@@ -108,6 +108,24 @@ if (isset($_POST["kaydet"])) {
 
     .logo:hover {
       opacity: 0.8;
+    }
+
+    .logo-button {
+      display: inline-block;
+      background-color: rgba(244, 124, 44, 0.82);
+
+      /* Buton rengi */
+      color: whitesmoke;
+      padding: 7.5px 20px;
+      margin-left: 10px;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    .logo-button:hover {
+      background-color: rgb(0, 62, 71);
     }
 
     .menu form {
@@ -251,7 +269,7 @@ if (isset($_POST["kaydet"])) {
 
 
     footer {
-      background-color: <?= $theme === 'dark' ? '#2b3741' : '#fff' ?>;
+      background-color: <?= $theme === 'dark' ? '#001f24' : '#fff' ?>;
       color: <?= $theme === 'dark' ? '#da6d23' : '#333' ?>;
       text-align: center;
       padding: 30px 10px;
@@ -271,8 +289,8 @@ if (isset($_POST["kaydet"])) {
   <!-- HEADER -->
   <header>
     <div class="logo">
-      <img src="https://cdn.creazilla.com/emojis/49577/monkey-emoji-clipart-xl.png" width="55px;" height="55  px;" class="logo-icon" style="margin-left: 50px;" />
-      <span class="logo-text">QuestionLive</span>
+      <img src="https://cdn.creazilla.com/emojis/49577/monkey-emoji-clipart-xl.png" width="55px" height="55px" class="logo-icon" style="margin-left: 50px;" />
+      <a href="anasayfa.php" class="logo-button">QuestionLive</a>
     </div>
     <div class="menu">
       <form action="" method="post">
