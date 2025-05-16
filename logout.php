@@ -7,4 +7,4 @@ session_destroy();
 
 header("Location: anasayfa.php");
 exit;
-?> onur
+?>
