@@ -82,25 +82,25 @@ if (isset($_SESSION["giris_basarili"]) && $_SESSION["giris_basarili"] === true) 
 
     .menu {
       display: flex;
-      gap: 15px;
+      gap: 20px;
       align-items: center;
       flex-wrap: wrap;
     }
 
     .menu input[type="text"] {
       padding: 6px 10px;
-      border: 1px solid #666;
-      border-radius: 6px;
+      border: 2px solid #666;
+      border-radius: 60px;
       background-color: <?= $theme === 'dark' ? '#2a2a2a' : '#fff' ?>;
       color: <?= $theme === 'dark' ? '#fff' : '#000' ?>;
     }
 
     .menu button {
       padding: 7px 14px;
-      border: 1px solid #f47c2c;
+      border: 2px solid #f47c2c;
       background-color: transparent;
       color: #f47c2c;
-      border-radius: 6px;
+      border-radius: 60px;
       cursor: pointer;
     }
 
@@ -144,7 +144,7 @@ if (isset($_SESSION["giris_basarili"]) && $_SESSION["giris_basarili"] === true) 
       max-width: 700px;
     }
 
-    .main .discover-btn {
+    /* .main .discover-btn {
       margin-top: 30px;
       padding: 15px 30px;
       background-color: #f47c2c;
@@ -157,7 +157,7 @@ if (isset($_SESSION["giris_basarili"]) && $_SESSION["giris_basarili"] === true) 
 
     .discover-btn:hover {
       background-color: #da6d23;
-    }
+    } */
 
     .actions {
       display: flex;
@@ -325,9 +325,9 @@ if (isset($_SESSION["giris_basarili"]) && $_SESSION["giris_basarili"] === true) 
   <div class="main">
     <h1><?= $language === 'tr' ? 'Dijital Etkileşimin Yeni Boyutunu Keşfet' : 'Discover the new dimension of digital interaction' ?></h1>
     <p style="color: #f47c2c;"><?= $language === 'tr' ? 'Etkinliklerde, işletmelerde ve eğitim ortamlarında anonim geri bildirim almanın en kolay yolu.' : 'The easiest way to receive anonymous feedback at events, businesses, and educational environments.' ?></p>
-    <form action="#">
+    <!-- <form action="#">
       <button class="discover-btn" style="margin-top: 35px;"><?= $language === 'tr' ? 'Olanakları Keşfet' : 'Discover the possibilities' ?></button>
-    </form>
+    </form> -->
     <div class="actions">
       <div class="action-box">
         <h3><?= $language === 'tr' ? 'Bir Oturuma Katıl' : 'Join a Session' ?></h3>
