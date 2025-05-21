@@ -8,25 +8,35 @@ if (!isset($_SESSION['uye_id'])) {
 }
 
 $createdBy = $_SESSION['uye_id'];
+$sessionCode = null;
 
-function generateSessionCode($length = 6)
-{
-    $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    $code = '';
-    for ($i = 0; $i < $length; $i++) {
-        $code .= $characters[rand(0, strlen($characters) - 1)];
+// Aktif oturumu kontrol et
+$checkStmt = $conn->prepare("SELECT session_code FROM sessions WHERE created_by = ? AND is_active = 1");
+$checkStmt->bind_param("i", $createdBy);
+$checkStmt->execute();
+$result = $checkStmt->get_result();
+
+if ($row = $result->fetch_assoc()) {
+    $sessionCode = $row['session_code'];
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Yeni oturum oluşturulabilir
+
+    function generateSessionCode($length = 6)
+    {
+        $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        $code = '';
+        for ($i = 0; $i < $length; $i++) {
+            $code .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        return $code;
     }
-    return $code;
-}
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $chatwall = isset($_POST['chatwall']) ? 1 : 0;
     $quiz = isset($_POST['quiz']) ? 1 : 0;
     $panic = isset($_POST['panic']) ? 1 : 0;
-
     $sessionCode = generateSessionCode();
 
-    $stmt = $conn->prepare("INSERT INTO sessions (session_code, created_by, chatwall, quiz, panic) VALUES (?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO sessions (session_code, created_by, chatwall, quiz, panic, is_active) VALUES (?, ?, ?, ?, ?, 1)");
     $stmt->bind_param("siiii", $sessionCode, $createdBy, $chatwall, $quiz, $panic);
 
     if (!$stmt->execute()) {
@@ -34,17 +44,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $stmt->close();
-    $conn->close();
 }
+
+$conn->close();
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Oturum Oluştur</title>
     <style>
+        /* CSS buraya senin verdiğin şekilde yapıştırıldı */
         body {
             font-family: Arial, sans-serif;
             background: #faebd7;
@@ -71,8 +83,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .logo-button {
             display: inline-block;
             background-color: rgba(244, 124, 44, 0.82);
-
-            /* Buton rengi */
             color: whitesmoke;
             padding: 5px 10px;
             margin-left: 10px;
@@ -123,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             flex-grow: 1;
             padding: 40px;
             margin-right: 270px;
-            margin-left: 270px
+            margin-left: 270px;
         }
 
         .container {
@@ -183,7 +193,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         a:hover {
             color: #0056b3;
         }
-
 
         .button {
             display: block;
@@ -253,47 +262,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </tr>
             </table>
         </div>
-
     </div>
 
     <div class="main-container">
         <div class="container">
             <h1 style="font-size: 185%;">ÖZELLİKLERİ SEÇİN</h1>
-            <p>Tüm özellikler devre dışıdır. Neyi etkinleştireceğinizi seçebilir ve daha sonra "Başlamama izin ver!" düğmesiyle başlayabilirsiniz. Özellikler ayrıca oturum sırasında etkinleştirilebilir/devre dışı bırakılabilir.:</p>
+            <p>Tüm özellikler devre dışıdır. Neyi etkinleştireceğinizi seçebilir ve daha sonra "Başlamama izin ver!" düğmesiyle başlayabilirsiniz.</p>
 
-            <form method="post">
-                <div class="feature">
-                    <input type="checkbox" id="chatwall" name="chatwall">
-                    <div>
-                        <h3 style="font-size: 160%;">Chatwall</h3>
-                        <p>Katılımcıların oturum sırasında konuşmacıya soru yöneltmelerine olanak tanır. Katılımcılar hangi katkıların kendileri için özellikle önemli olduğuna karar verirler.</p>
+            <?php if ($sessionCode === null): ?>
+                <form method="post">
+                    <div class="feature">
+                        <input type="checkbox" id="chatwall" name="chatwall" />
+                        <div>
+                            <h3 style="font-size: 160%;">Chatwall</h3>
+                            <p>Katılımcıların oturum sırasında konuşmacıya soru yöneltmelerine olanak tanır.</p>
+                        </div>
                     </div>
-                </div>
 
-                <div class="feature">
-                    <input type="checkbox" id="quiz" name="quiz">
-                    <div>
-                        <h3 style="font-size: 160%;">Quiz</h3>
-                        <p>Konuşmacının izleyicilere tek seçenekli bir soru yöneltmesini sağlar. Daha sonra katılımcılar bir cevap seçeneği belirleyebilirler.</p>
+                    <div class="feature">
+                        <input type="checkbox" id="quiz" name="quiz" />
+                        <div>
+                            <h3 style="font-size: 160%;">Quiz</h3>
+                            <p>Konuşmacının izleyicilere tek seçenekli bir soru yöneltmesini sağlar.</p>
+                        </div>
                     </div>
-                </div>
 
-                <div class="feature">
-                    <input type="checkbox" id="panic" name="panic">
-                    <div>
-                        <h3 style="font-size: 160%;">Panic-Buttons</h3>
-                        <p>Katılımcılar "çok hızlı", "lütfen örnek verin" vb. gibi konuları iletebilirler.</p>
+                    <div class="feature">
+                        <input type="checkbox" id="panic" name="panic" />
+                        <div>
+                            <h3 style="font-size: 160%;">Panic-Buttons</h3>
+                            <p>Katılımcılar "çok hızlı", "lütfen örnek verin" gibi bildirimlerde bulunabilir.</p>
+                        </div>
                     </div>
-                </div>
 
-                <button type="submit" class="button">Oturumu Başlat</button>
-            </form>
+                    <button type="submit" class="button">Oturumu Başlat</button>
+                </form>
+            <?php endif; ?>
 
-            <?php if ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
+            <?php if ($sessionCode !== null): ?>
                 <div class="code-box">
-                    Oturum Kodu: <?php echo htmlspecialchars($sessionCode); ?>
+                    Aktif Oturum Kodu: <?php echo htmlspecialchars($sessionCode); ?>
                 </div>
-
                 <form action="endSession.php" method="post" style="text-align: center;">
                     <input type="hidden" name="session_code" value="<?php echo htmlspecialchars($sessionCode); ?>">
                     <button type="submit" class="button end-button">Oturumu Sonlandır</button>
