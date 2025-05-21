@@ -182,7 +182,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         a:hover {
             color: #0056b3;
-            text-decoration: underline;
         }
 
 
@@ -202,6 +201,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background-color: #d9534f;
             margin-top: 20px;
         }
+
+        .menu {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .menu td {
+            padding: 10px;
+        }
+
+        .menu a {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            text-align: left;
+            border: 3px solid #ccc;
+            text-decoration: none;
+            background-color: #fff;
+            font-weight: bold;
+            box-sizing: border-box;
+            margin-bottom: 3px;
+        }
+
+        .menu a:hover {
+            background-color: #e0e0e0;
+        }
     </style>
 </head>
 
@@ -211,12 +236,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <img src="https://cdn.creazilla.com/emojis/49577/monkey-emoji-clipart-xl.png" width="55px" height="55px" class="logo-icon" style="margin-left: 7px; margin-bottom: 50px;" />
             <a href="anasayfa.php" class="logo-button" style="margin-bottom: 50px;">QuestionLive</a>
         </div>
-        <ul>
-            <a href="#">Chatwall 💬</a>
-            <a href="#">Quiz ❔</a>
-            <a href="#">Panic ❕</a>
-            <a href="#">Session 🎓</a>
-        </ul>
+
+        <div class="menu">
+            <table class="menu">
+                <tr>
+                    <td><a href="#">💬 Chatwall</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#">❔ Quiz</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#">❕ Panic</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#">🎓 Session</a></td>
+                </tr>
+            </table>
+        </div>
+
     </div>
 
     <div class="main-container">
