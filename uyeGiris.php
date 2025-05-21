@@ -250,6 +250,7 @@ if (isset($_POST["giris"])) {
         <button type="submit" name="giris"><?= $language === 'tr' ? 'Giriş Yap' : 'Login' ?></button>
       </form>
       <a href="uyeKayit.php" style="margin-top:25px"><?= $language === 'tr' ? 'Hesabınız yok mu? Kayıt olun' : "Don't have an account? Sign up" ?></a>
+      <a href="forgot_password.php" style="margin-top:25px"><?= $language === 'tr' ? 'Şifremi Unuttum' : "Forgot Password" ?></a>
       <a href="anaSayfa.php" style="margin-top:25px"><?= $language === 'tr' ? 'Ana Sayfaya Dön' : 'Back to Home' ?></a>
     </div>
   </div>
