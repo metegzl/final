@@ -5,25 +5,33 @@ require_once("connection.php");
 $success = false;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["session_code"])) {
-    $code = $_POST["session_code"];
+  $code = $_POST["session_code"];
 
-    $stmt = $conn->prepare("DELETE FROM sessions WHERE session_code = ?");
-    $stmt->bind_param("s", $code);
+  // chat mesajlarını sil
+  $stmt1 = $conn->prepare("DELETE FROM chat_messages WHERE session_code = ?");
+  $stmt1->bind_param("s", $code);
 
-    if ($stmt->execute()) {
-        $success = true;
-    } else {
-        $errorMsg = "Bir hata oluştu: " . $stmt->error;
-    }
+  // session kaydını sil
+  $stmt2 = $conn->prepare("DELETE FROM sessions WHERE session_code = ?");
+  $stmt2->bind_param("s", $code);
 
-    $stmt->close();
-    $conn->close();
+  if ($stmt1->execute() && $stmt2->execute()) {
+    $success = true;
+  } else {
+    $errorMsg = "Bir hata oluştu: " . $conn->error;
+  }
+
+  $stmt1->close();
+  $stmt2->close();
+  $conn->close();
 } else {
-    $errorMsg = "Geçersiz istek.";
+  $errorMsg = "Geçersiz istek.";
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Session Ended</title>
@@ -73,28 +81,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["session_code"])) {
     }
   </style>
 </head>
+
 <body>
 
-<?php if ($success): ?>
-  <div id="toast" class="toast">
-    <i>✔️</i> Ders oturumu sonlanmıştır
-  </div>
-  <script>
-  const toast = document.getElementById("toast");
-  toast.classList.add("show");
-
   <?php if ($success): ?>
-    setTimeout(() => {
-      toast.classList.remove("show");
-    }, 2200);
+    <div id="toast" class="toast">
+      <i>✔️</i> Ders oturumu sonlanmıştır
+    </div>
+    <script>
+      const toast = document.getElementById("toast");
+      toast.classList.add("show");
 
-    setTimeout(() => {
-      window.location.href = "anasayfa.php";
-    }, 2500);
+      <?php if ($success): ?>
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 2200);
+
+        setTimeout(() => {
+          window.location.href = "anasayfa.php";
+        }, 2500);
+      <?php endif; ?>
+    </script>
+
   <?php endif; ?>
-</script>
-
-<?php endif; ?>
 
 </body>
+
 </html>

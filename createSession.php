@@ -56,7 +56,6 @@ $conn->close();
     <meta charset="UTF-8" />
     <title>Oturum Oluştur</title>
     <style>
-        /* CSS buraya senin verdiğin şekilde yapıştırıldı */
         body {
             font-family: Arial, sans-serif;
             background: #faebd7;
@@ -226,6 +225,7 @@ $conn->close();
             padding: 12px;
             text-align: left;
             border: 3px solid #ccc;
+            border-radius: 10px;
             text-decoration: none;
             background-color: #fff;
             font-weight: bold;
@@ -249,7 +249,7 @@ $conn->close();
         <div class="menu">
             <table class="menu">
                 <tr>
-                    <td><a href="#">💬 Chatwall</a></td>
+                    <td><a href="chatwall.php">💬 Chatwall</a></td>
                 </tr>
                 <tr>
                     <td><a href="#">❔ Quiz</a></td>
@@ -258,18 +258,19 @@ $conn->close();
                     <td><a href="#">❕ Panic</a></td>
                 </tr>
                 <tr>
-                    <td><a href="#">🎓 Session</a></td>
+                    <td><a href="createSession.php">🎓 Session</a></td>
                 </tr>
             </table>
         </div>
     </div>
 
     <div class="main-container">
-        <div class="container">
-            <h1 style="font-size: 185%;">ÖZELLİKLERİ SEÇİN</h1>
-            <p>Tüm özellikler devre dışıdır. Neyi etkinleştireceğinizi seçebilir ve daha sonra "Başlamama izin ver!" düğmesiyle başlayabilirsiniz.</p>
+        <?php if ($sessionCode === null): ?>
+            <div class="container">
+                <h1 style="font-size: 185%;">ÖZELLİKLERİ SEÇİN</h1>
+                <p>Tüm özellikler devre dışıdır. Neyi etkinleştireceğinizi seçebilir ve daha sonra "Başlamama izin ver!" düğmesiyle başlayabilirsiniz.</p>
 
-            <?php if ($sessionCode === null): ?>
+
                 <form method="post">
                     <div class="feature">
                         <input type="checkbox" id="chatwall" name="chatwall" />
@@ -308,7 +309,7 @@ $conn->close();
                     <button type="submit" class="button end-button">Oturumu Sonlandır</button>
                 </form>
             <?php endif; ?>
-        </div>
+            </div>
     </div>
 </body>
 
