@@ -1,3 +1,29 @@
+<?php
+include 'connection.php';
+session_start();
+
+if (!isset($_SESSION['uye_id'])) {
+    die("Giriş yapmalısınız.");
+}
+
+$createdBy = $_SESSION['uye_id'];
+$session_id = $_GET['session_id'] ?? null;
+
+if (!$session_id) {
+    $stmt = $conn->prepare("SELECT session_code FROM sessions WHERE created_by = ? AND is_active = 1 LIMIT 1");
+    $stmt->bind_param("i", $createdBy);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($row = $result->fetch_assoc()) {
+        $session_id = $row['session_code'];
+    } else {
+        die("Aktif oturum bulunamadı.");
+    }
+    $stmt->close();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
