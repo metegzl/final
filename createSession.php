@@ -252,10 +252,10 @@ $conn->close();
                     <td><a href="chatwall.php">💬 Chatwall</a></td>
                 </tr>
                 <tr>
-                    <td><a href="#">❔ Quiz</a></td>
+                    <td><a href="quiz.php">❔ Quiz</a></td>
                 </tr>
                 <tr>
-                    <td><a href="#">❕ Panic</a></td>
+                    <td><a href="panic.php">❕ Panic</a></td>
                 </tr>
                 <tr>
                     <td><a href="createSession.php">🎓 Session</a></td>

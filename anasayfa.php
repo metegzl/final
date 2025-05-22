@@ -357,7 +357,7 @@ if (isset($_SESSION["giris_basarili"]) && $_SESSION["giris_basarili"] === true) 
       toast.classList.add("show");
       setTimeout(() => {
         toast.classList.remove("show");
-      }, 3000);
+      }, 2500);
     </script>
   <?php endif; ?>
 

@@ -197,54 +197,6 @@ if (!$session_id) {
             </table>
         </div>
     </div>
-
-    <div class="main-container">
-        <h2>Chat - Oturum: <?php echo htmlspecialchars($session_id); ?></h2>
-        <div id="chat-container">
-            <div id="chat-box"></div>
-            <form id="chat-form">
-                <input type="text" id="user_name" placeholder="Adınız" required>
-                <input type="text" id="message" placeholder="Mesajınız" required>
-                <button type="submit">Gönder</button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        const sessionId = "<?php echo htmlspecialchars($session_id); ?>";
-
-        function loadMessages() {
-            fetch('loadMessages.php?session_id=' + sessionId)
-                .then(res => res.text())
-                .then(data => {
-                    const box = document.getElementById('chat-box');
-                    box.innerHTML = data;
-                    box.scrollTop = box.scrollHeight;
-                });
-        }
-
-        loadMessages();
-        setInterval(loadMessages, 3000);
-
-        document.getElementById('chat-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('user_name').value;
-            const msg = document.getElementById('message').value;
-
-            fetch('sendMessage.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: 'session_id=' + encodeURIComponent(sessionId) +
-                    '&user_name=' + encodeURIComponent(name) +
-                    '&message=' + encodeURIComponent(msg)
-            }).then(() => {
-                document.getElementById('message').value = '';
-                loadMessages();
-            });
-        });
-    </script>
 </body>
 
 </html>
