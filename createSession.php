@@ -88,7 +88,7 @@ $conn->close();
             text-decoration: none;
             border-radius: 5px;
             font-weight: bold;
-            transition: background-color 0.3s;
+            transition: background-color 0.2s;
         }
 
         .logo-button:hover {
@@ -97,7 +97,7 @@ $conn->close();
 
         .sidebar {
             width: 300px;
-            background-color: #ffdead;
+            background-color: rgb(61, 131, 184);
             border-right: 1px solid #ddd;
             padding: 30px 15px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);

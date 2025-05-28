@@ -41,7 +41,7 @@ if (!$session_id) {
 
         .sidebar {
             width: 300px;
-            background-color: #ffdead;
+            background-color: rgb(61, 131, 184);
             border-right: 1px solid #ddd;
             padding: 30px 15px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
