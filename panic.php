@@ -33,7 +33,7 @@ if (!$session_id) {
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #f6f6f6;
+            background: #faebd7;
             margin: 0;
             padding: 0;
             display: flex;
