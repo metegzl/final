@@ -1,28 +1,30 @@
 <?php
-include 'connection.php';
 session_start();
+require_once("connection.php");
 
-if (!isset($_SESSION['uye_id'])) {
-    die("Giriş yapmalısınız.");
+if (!isset($_SESSION['current_session_code'])) {
+    die("Oturum kodu belirtilmedi.");
 }
 
-$createdBy = $_SESSION['uye_id'];
-$session_id = $_GET['session_id'] ?? null;
+$sessionCode = $_SESSION['current_session_code'];
 
-if (!$session_id) {
-    $stmt = $conn->prepare("SELECT session_code FROM sessions WHERE created_by = ? AND is_active = 1 LIMIT 1");
-    $stmt->bind_param("i", $createdBy);
-    $stmt->execute();
-    $result = $stmt->get_result();
+$stmt = $conn->prepare("SELECT chatwall FROM sessions WHERE session_code = ?");
+$stmt->bind_param("s", $sessionCode);
+$stmt->execute();
+$result = $stmt->get_result();
 
-    if ($row = $result->fetch_assoc()) {
-        $session_id = $row['session_code'];
-    } else {
-        die("Aktif oturum bulunamadı.");
+if ($row = $result->fetch_assoc()) {
+    if ($row['chatwall'] != 1) {
+        die("Bu özellik bu oturumda aktif değil.");
     }
-    $stmt->close();
+} else {
+    die("Geçersiz oturum kodu.");
 }
+
+// chatwall özelliği aktif, devam edebilir
 ?>
+
+
 <!DOCTYPE html>
 <html lang="tr">
 
@@ -199,7 +201,7 @@ if (!$session_id) {
     </div>
 
     <div class="main-container">
-        <h2>Chat - Oturum: <?php echo htmlspecialchars($session_id); ?></h2>
+        <h2>Chat - Oturum: <?php echo htmlspecialchars($sessionCode); ?></h2>
         <div id="chat-container">
             <div id="chat-box"></div>
             <form id="chat-form">

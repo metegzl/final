@@ -35,6 +35,8 @@ if ($row = $result->fetch_assoc()) {
     $quiz = isset($_POST['quiz']) ? 1 : 0;
     $panic = isset($_POST['panic']) ? 1 : 0;
     $sessionCode = generateSessionCode();
+    $_SESSION['current_session_code'] = $sessionCode;
+
 
     $stmt = $conn->prepare("INSERT INTO sessions (session_code, created_by, chatwall, quiz, panic, is_active) VALUES (?, ?, ?, ?, ?, 1)");
     $stmt->bind_param("siiii", $sessionCode, $createdBy, $chatwall, $quiz, $panic);
@@ -57,10 +59,11 @@ $conn->close();
     <title>Oturum Oluştur</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #faebd7;
+            height: 100%;
             margin: 0;
             padding: 0;
+            font-family: Arial, sans-serif;
+            background: #faebd7;
             display: flex;
             flex-direction: row-reverse;
         }
@@ -130,9 +133,14 @@ $conn->close();
 
         .main-container {
             flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
             padding: 40px;
-            margin-right: 270px;
-            margin-left: 270px;
+            overflow-y: auto;
+            height: 100vh;
+            box-sizing: border-box;
         }
 
         .container {
@@ -141,10 +149,16 @@ $conn->close();
             border-left: 8px solid #4285f4;
             padding: 15px 20px;
             border-radius: 8px;
-            margin: 50px 0;
+            margin: 0 auto;
             font-size: 15px;
             line-height: 1.6;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 800px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         h1 {
