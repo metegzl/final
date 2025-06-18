@@ -33,13 +33,14 @@ if ($row = $result->fetch_assoc()) {
 
     $chatwall = isset($_POST['chatwall']) ? 1 : 0;
     $quiz = isset($_POST['quiz']) ? 1 : 0;
-    $panic = isset($_POST['panic']) ? 1 : 0;
     $sessionCode = generateSessionCode();
     $_SESSION['current_session_code'] = $sessionCode;
 
 
-    $stmt = $conn->prepare("INSERT INTO sessions (session_code, created_by, chatwall, quiz, panic, is_active) VALUES (?, ?, ?, ?, ?, 1)");
-    $stmt->bind_param("siiii", $sessionCode, $createdBy, $chatwall, $quiz, $panic);
+    $stmt = $conn->prepare(
+        "INSERT INTO sessions (session_code, created_by, chatwall, quiz, is_active) VALUES (?, ?, ?, ?, 1)"
+    );
+    $stmt->bind_param("siii", $sessionCode, $createdBy, $chatwall, $quiz);
 
     if (!$stmt->execute()) {
         die("Veritabanına kayıt yapılamadı: " . $stmt->error);
@@ -269,9 +270,6 @@ $conn->close();
                     <td><a href="quiz.php">❔ Quiz</a></td>
                 </tr>
                 <tr>
-                    <td><a href="panic.php">❕ Panic</a></td>
-                </tr>
-                <tr>
                     <td><a href="createSession.php">🎓 Session</a></td>
                 </tr>
             </table>
@@ -299,14 +297,6 @@ $conn->close();
                         <div>
                             <h3 style="font-size: 160%;">Quiz</h3>
                             <p>Konuşmacının izleyicilere tek seçenekli bir soru yöneltmesini sağlar.</p>
-                        </div>
-                    </div>
-
-                    <div class="feature">
-                        <input type="checkbox" id="panic" name="panic" />
-                        <div>
-                            <h3 style="font-size: 160%;">Panic-Buttons</h3>
-                            <p>Katılımcılar "çok hızlı", "lütfen örnek verin" gibi bildirimlerde bulunabilir.</p>
                         </div>
                     </div>
 

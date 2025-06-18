@@ -191,9 +191,6 @@ if ($row = $result->fetch_assoc()) {
                     <td><a href="quiz.php">❔ Quiz</a></td>
                 </tr>
                 <tr>
-                    <td><a href="panic.php">❕ Panic</a></td>
-                </tr>
-                <tr>
                     <td><a href="createSession.php">🎓 Session</a></td>
                 </tr>
             </table>

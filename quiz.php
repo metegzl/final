@@ -20,8 +20,6 @@ if ($row = $result->fetch_assoc()) {
 } else {
     die("Geçersiz oturum kodu.");
 }
-
-// quiz özelliği aktif, sayfa devam edebilir
 ?>
 
 
@@ -190,9 +188,6 @@ if ($row = $result->fetch_assoc()) {
                 </tr>
                 <tr>
                     <td><a href="quiz.php">❔ Quiz</a></td>
-                </tr>
-                <tr>
-                    <td><a href="panic.php">❕ Panic</a></td>
                 </tr>
                 <tr>
                     <td><a href="createSession.php">🎓 Session</a></td>
