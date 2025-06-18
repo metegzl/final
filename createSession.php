@@ -235,21 +235,26 @@ $conn->close();
         }
 
         .menu a {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            text-align: left;
+            font-size: 30px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0.09px;
             border: 3px solid #ccc;
             border-radius: 10px;
-            text-decoration: none;
-            background-color: #fff;
-            font-weight: bold;
+            background: #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
             box-sizing: border-box;
-            margin-bottom: 3px;
+            text-decoration: none;
+            font-weight: bold;
+            color: #007BFF;
+            transition: background .2s, box-shadow .2s;
         }
 
         .menu a:hover {
-            background-color: #e0e0e0;
+            background: #e0e0e0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, .35);
         }
     </style>
 </head>
@@ -264,7 +269,7 @@ $conn->close();
         <div class="menu">
             <table class="menu">
                 <tr>
-                    <td><a href="chatwall.php">💬 Chatwall</a></td>
+                    <td><a href="chatwall.php">💬 Chat</a></td>
                 </tr>
                 <tr>
                     <td><a href="quiz.php">❔ Quiz</a></td>
@@ -280,7 +285,7 @@ $conn->close();
         <?php if ($sessionCode === null): ?>
             <div class="container">
                 <h1 style="font-size: 185%;">ÖZELLİKLERİ SEÇİN</h1>
-                <p>Tüm özellikler devre dışıdır. Neyi etkinleştireceğinizi seçebilir ve daha sonra "Başlamama izin ver!" düğmesiyle başlayabilirsiniz.</p>
+                <p>Tüm özellikler devre dışıdır. Neyi etkinleştireceğinizi seçebilir ve daha sonra "Oturumu Başlat" düğmesiyle başlayabilirsiniz.</p>
 
 
                 <form method="post">

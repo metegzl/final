@@ -281,7 +281,7 @@ if (isset($_SESSION["giris_basarili"]) && $_SESSION["giris_basarili"] === true) 
 
   <header>
     <div class="logo">
-      <img src="https://cdn.creazilla.com/emojis/49577/monkey-emoji-clipart-xl.png" width="55px" height="55px" class="logo-icon" style="margin-left: 50px;" />
+      <img src="https://cdn.creazilla.com/emojis/49577/monkey-emoji-clipart-xl.png" width="55px" height="55px" class="logo-icon" style="margin-left: 15px;" />
       <a href="anasayfa.php" class="logo-button">QuestionLive</a>
     </div>
 

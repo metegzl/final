@@ -2,26 +2,39 @@
 session_start();
 require_once("connection.php");
 
+/* Oturum kodu yoksa */
 if (!isset($_SESSION['current_session_code'])) {
-    die("Oturum kodu belirtilmedi.");
+    echo "<script>
+            alert('Oturum kodu belirtilmedi.');
+            window.location.href = 'createSession.php';
+          </script>";
+    exit;
 }
 
 $sessionCode = $_SESSION['current_session_code'];
 
+/* chatwall yetkisini sorgula */
 $stmt = $conn->prepare("SELECT chatwall FROM sessions WHERE session_code = ?");
 $stmt->bind_param("s", $sessionCode);
 $stmt->execute();
 $result = $stmt->get_result();
 
+/* Sonuç yok veya aktif değilse uyarı göster */
 if ($row = $result->fetch_assoc()) {
     if ($row['chatwall'] != 1) {
-        die("Bu özellik bu oturumda aktif değil.");
+        echo "<script>
+                alert('Bu özellik bu oturumda aktif değil.');
+                window.location.href = 'createSession.php';
+              </script>";
+        exit;
     }
 } else {
-    die("Geçersiz oturum kodu.");
+    echo "<script>
+            alert('Geçersiz oturum kodu.');
+            window.location.href = 'createSession.php';
+          </script>";
+    exit;
 }
-
-// chatwall özelliği aktif, devam edebilir
 ?>
 
 
@@ -90,21 +103,25 @@ if ($row = $result->fetch_assoc()) {
         }
 
         .menu a {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            text-align: left;
+            font-size: 30px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
             border: 3px solid #ccc;
             border-radius: 10px;
-            text-decoration: none;
-            background-color: #fff;
-            font-weight: bold;
+            background: #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
             box-sizing: border-box;
-            margin-bottom: 3px;
+            text-decoration: none;
+            font-weight: bold;
+            color: #007BFF;
+            transition: background .2s, box-shadow .2s;
         }
 
         .menu a:hover {
-            background-color: #e0e0e0;
+            background: #e0e0e0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, .35);
         }
 
         .main-container {
@@ -135,7 +152,7 @@ if ($row = $result->fetch_assoc()) {
             border: 2px solid #ccc;
             overflow-y: scroll;
             padding: 20px;
-            background-color: #ffdead;
+            background-color: rgb(164, 241, 255);
             margin-bottom: 20px;
             border-radius: 5px;
         }
@@ -185,7 +202,7 @@ if ($row = $result->fetch_assoc()) {
         <div class="menu">
             <table class="menu">
                 <tr>
-                    <td><a href="chatwall.php">💬 Chatwall</a></td>
+                    <td><a href="chatwall.php">💬 Chat</a></td>
                 </tr>
                 <tr>
                     <td><a href="quiz.php">❔ Quiz</a></td>
