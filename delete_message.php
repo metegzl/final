@@ -1,16 +1,12 @@
 <?php
 require_once("connection.php");
 
-if (isset($_POST['id'])) 
-{
+if (isset($_POST['id'])) {
     $id = intval($_POST['id']);
     $stmt = $conn->prepare("DELETE FROM chat_messages WHERE id = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     echo "Silindi";
-} 
-else 
-{
+} else {
     echo "Geçersiz istek";
 }
-?>

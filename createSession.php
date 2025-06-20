@@ -19,8 +19,6 @@ $result = $checkStmt->get_result();
 if ($row = $result->fetch_assoc()) {
     $sessionCode = $row['session_code'];
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Yeni oturum oluşturulabilir
-
     function generateSessionCode($length = 6)
     {
         $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -35,7 +33,6 @@ if ($row = $result->fetch_assoc()) {
     $quiz = isset($_POST['quiz']) ? 1 : 0;
     $sessionCode = generateSessionCode();
     $_SESSION['current_session_code'] = $sessionCode;
-
 
     $stmt = $conn->prepare(
         "INSERT INTO sessions (session_code, created_by, chatwall, quiz, is_active) VALUES (?, ?, ?, ?, 1)"
@@ -66,7 +63,18 @@ $conn->close();
             font-family: Arial, sans-serif;
             background: #faebd7;
             display: flex;
-            flex-direction: row-reverse;
+        }
+
+        .sidebar {
+            width: 390px;
+            background-color: rgb(61, 131, 184);
+            border-right: 1px solid #ddd;
+            padding: 30px 15px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
         .logo {
@@ -75,6 +83,7 @@ $conn->close();
             font-size: 30px;
             font-weight: bold;
             color: #f47c2c;
+            margin-bottom: 60px;
         }
 
         .logo-icon {
@@ -92,137 +101,23 @@ $conn->close();
             text-decoration: none;
             border-radius: 5px;
             font-weight: bold;
-            transition: background-color 0.2s;
+            transition: background-color 0.3s;
+            font-size: 28px;
         }
 
         .logo-button:hover {
             background-color: rgb(0, 62, 71);
         }
 
-        .sidebar {
-            width: 300px;
-            background-color: rgb(61, 131, 184);
-            border-right: 1px solid #ddd;
-            padding: 30px 15px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
-            height: 100vh;
-        }
-
-        .sidebar h2 {
-            font-size: 24px;
-            margin-bottom: 30px;
-        }
-
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .sidebar ul li {
-            margin-bottom: 20px;
-            color: #bbb;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-        }
-
-        .sidebar ul li::before {
-            content: '•';
-            margin-right: 8px;
-            color: #bbb;
-        }
-
-        .main-container {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            padding: 40px;
-            overflow-y: auto;
-            height: 100vh;
-            box-sizing: border-box;
-        }
-
-        .container {
-            background-color: #eee9e9;
-            color: #333;
-            border-left: 8px solid #4285f4;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin: 0 auto;
-            font-size: 15px;
-            line-height: 1.6;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-            width: 100%;
-            max-width: 800px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        h1 {
-            font-size: 26px;
-        }
-
-        .feature {
-            border: 2px solid #ccc;
-            border-radius: 10px;
-            margin-top: 20px;
-            display: flex;
-            padding: 20px;
-            background-color: #fafafa;
-        }
-
-        .feature input {
-            margin-right: 30px;
-            transform: scale(2);
-        }
-
-        .feature h3 {
-            margin: 0 0 5px 0;
-        }
-
-        .code-box {
-            margin-top: 40px;
-            padding: 20px;
-            background: #f3f3f3;
-            border: 2px dashed #999;
-            text-align: center;
-            font-size: 24px;
+        .mod-label {
+            color: #14234B;
             font-weight: bold;
+            font-size: 1em;
+            margin-left: 16px;
+            background: #d6e4ff;
+            padding: 4px 14px;
             border-radius: 8px;
-            color: #333;
-        }
-
-        a {
-            display: block;
-            margin-bottom: 15px;
-            color: #007BFF;
-            text-decoration: none;
-            font-size: 30px;
-        }
-
-        a:hover {
-            color: #0056b3;
-        }
-
-        .button {
-            display: block;
-            margin: 30px auto 0;
-            padding: 10px 20px;
-            background-color: #5cb85c;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .end-button {
-            background-color: #d9534f;
-            margin-top: 20px;
+            letter-spacing: 1px;
         }
 
         .menu {
@@ -240,7 +135,6 @@ $conn->close();
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 0.09px;
             border: 3px solid #ccc;
             border-radius: 10px;
             background: #fff;
@@ -256,23 +150,181 @@ $conn->close();
             background: #e0e0e0;
             box-shadow: 0 4px 8px rgba(0, 0, 0, .35);
         }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 160px;
+                padding: 15px 7px;
+            }
+
+            .logo-button {
+                font-size: 18px;
+            }
+
+            .mod-label {
+                font-size: .92em;
+                padding: 3px 8px;
+                margin-left: 8px;
+            }
+
+            .menu a {
+                font-size: 18px;
+                padding: 10px;
+            }
+        }
+
+        .main-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 40px;
+            overflow-y: auto;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: #eee9e9;
+            color: #333;
+            border-left: 8px solidrgb(244, 241, 66);
+            padding: 28px 40px;
+            border-radius: 12px;
+            margin: 0 auto;
+            font-size: 17px;
+            line-height: 1.6;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.07);
+            width: 100%;
+            max-width: 540px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-top: 50px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #14234B;
+        }
+
+        .feature {
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: flex;
+            padding: 20px;
+            background-color: #fafafa;
+            align-items: center;
+        }
+
+        .feature input {
+            margin-right: 30px;
+            transform: scale(2);
+        }
+
+        .feature h3 {
+            margin: 0 0 5px 0;
+        }
+
+        .feature p {
+            margin: 0;
+            font-size: 0.98em;
+        }
+
+        .code-box {
+            margin-top: 40px;
+            padding: 20px;
+            background: #f3f3f3;
+            border: 2px dashed #999;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 8px;
+            color: #333;
+        }
+
+        .button {
+            display: block;
+            margin: 30px auto 0;
+            padding: 12px 36px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 18px;
+            cursor: pointer;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .button:hover {
+            background-color: #389638;
+        }
+
+        .end-button {
+            background-color: #d9534f;
+            margin-top: 32px;
+        }
+
+        .end-button:hover {
+            background: #a52823;
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 180px;
+                padding: 12px 4px;
+            }
+
+            .logo-combined {
+                font-size: 18px;
+                padding: 8px 7px 8px 5px;
+            }
+
+            .logo-icon {
+                width: 30px;
+                height: 30px;
+            }
+
+            .logo-button {
+                font-size: 15px;
+            }
+
+            .menu a {
+                font-size: 17px;
+                padding: 7px;
+            }
+
+            .container {
+                max-width: 96vw;
+                padding: 15px 7px;
+                margin-top: 22px;
+            }
+
+            h1 {
+                font-size: 19px;
+            }
+        }
     </style>
 </head>
 
 <body>
     <div class="sidebar">
         <div class="logo">
-            <img src="https://cdn.creazilla.com/emojis/49577/monkey-emoji-clipart-xl.png" width="55px" height="55px" class="logo-icon" style="margin-left: 7px; margin-bottom: 50px;" />
-            <a href="anasayfa.php" class="logo-button" style="margin-bottom: 50px;">QuestionLive</a>
+            <img src="https://cdn.creazilla.com/emojis/49577/monkey-emoji-clipart-xl.png" width="55px" height="55px" class="logo-icon" style="margin-left: 7px;" />
+            <a href="anasayfa.php" class="logo-button">QuestionLive</a>
+            <span class="mod-label">Mod</span>
         </div>
-
         <div class="menu">
             <table class="menu">
                 <tr>
-                    <td><a href="chatwall.php">💬 Chat</a></td>
+                    <td><a href="modChatwall.php">💬 Chat</a></td>
                 </tr>
                 <tr>
-                    <td><a href="quiz.php">❔ Quiz</a></td>
+                    <td><a href="modQuiz.php">❔ Quiz</a></td>
                 </tr>
                 <tr>
                     <td><a href="createSession.php">🎓 Session</a></td>
@@ -284,32 +336,30 @@ $conn->close();
     <div class="main-container">
         <?php if ($sessionCode === null): ?>
             <div class="container">
-                <h1 style="font-size: 185%;">ÖZELLİKLERİ SEÇİN</h1>
-                <p>Tüm özellikler devre dışıdır. Neyi etkinleştireceğinizi seçebilir ve daha sonra "Oturumu Başlat" düğmesiyle başlayabilirsiniz.</p>
-
-
+                <h1>ÖZELLİKLERİ SEÇİN</h1>
+                <p style="margin-bottom: 24px;">Tüm özellikler devre dışıdır. Neyi etkinleştireceğinizi seçebilir ve daha sonra <b>Oturumu Başlat</b> düğmesiyle başlayabilirsiniz.</p>
                 <form method="post">
                     <div class="feature">
                         <input type="checkbox" id="chatwall" name="chatwall" />
                         <div>
-                            <h3 style="font-size: 160%;">Chatwall</h3>
+                            <h3 style="font-size: 112%;">Chatwall</h3>
                             <p>Katılımcıların oturum sırasında konuşmacıya soru yöneltmelerine olanak tanır.</p>
                         </div>
                     </div>
-
                     <div class="feature">
                         <input type="checkbox" id="quiz" name="quiz" />
                         <div>
-                            <h3 style="font-size: 160%;">Quiz</h3>
+                            <h3 style="font-size: 112%;">Quiz</h3>
                             <p>Konuşmacının izleyicilere tek seçenekli bir soru yöneltmesini sağlar.</p>
                         </div>
                     </div>
-
                     <button type="submit" class="button">Oturumu Başlat</button>
                 </form>
-            <?php endif; ?>
+            </div>
+        <?php endif; ?>
 
-            <?php if ($sessionCode !== null): ?>
+        <?php if ($sessionCode !== null): ?>
+            <div class="container">
                 <div class="code-box">
                     Aktif Oturum Kodu: <?php echo htmlspecialchars($sessionCode); ?>
                 </div>
@@ -317,8 +367,8 @@ $conn->close();
                     <input type="hidden" name="session_code" value="<?php echo htmlspecialchars($sessionCode); ?>">
                     <button type="submit" class="button end-button">Oturumu Sonlandır</button>
                 </form>
-            <?php endif; ?>
             </div>
+        <?php endif; ?>
     </div>
 </body>
 
