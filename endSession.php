@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["session_code"])) {
   $code = $_POST["session_code"];
 
   // chat mesajlarını sil
-  $stmt1 = $conn->prepare("DELETE FROM chat_messages WHERE session_code = ?");
+  $stmt1 = $conn->prepare("DELETE FROM sessions WHERE session_code = ?");
   $stmt1->bind_param("s", $code);
 
   // session kaydını sil

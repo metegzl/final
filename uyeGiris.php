@@ -31,7 +31,14 @@ if (isset($_POST["giris"])) {
       $_SESSION["uye_soyadi"] = $user["uye_soyadi"];
       $_SESSION["uye_mail"] = $user["uye_mail"];
       $_SESSION["giris_basarili"] = true; //DENEME
-      header("Location: anaSayfa.php");
+      // ADMIN KONTROLÜ EKLENDİ
+      if (isset($user["is_admin"]) && $user["is_admin"] == 1) {
+        $_SESSION["is_admin"] = 1;
+        header("Location: moderatorPanel.php");
+      } else {
+        $_SESSION["is_admin"] = 0;
+        header("Location: anaSayfa.php");
+      }
       exit;
     } else {
       $message = $language === 'tr' ? "Şifre Hatalı!!" : "Incorrect password.";
@@ -92,8 +99,6 @@ if (isset($_POST["giris"])) {
     .logo-button {
       display: inline-block;
       background-color: rgba(244, 124, 44, 0.82);
-
-      /* Buton rengi */
       color: whitesmoke;
       padding: 7.5px 20px;
       margin-left: 10px;
@@ -221,12 +226,12 @@ if (isset($_POST["giris"])) {
   <header>
     <div class="logo">
       <img src="https://cdn.creazilla.com/emojis/49577/monkey-emoji-clipart-xl.png" width="55px" height="55px" class="logo-icon" style="margin-left: 50px;" />
-      <a href="anasayfa.php" class="logo-button">QuestionLive</a>
+      <a href="anaSayfa.php" class="logo-button">QuestionLive</a>
     </div>
     <div class="menu">
       <form action="" method="post">
         <button type="submit" name="language" value="<?= $language === 'tr' ? 'en' : 'tr' ?>" class="language-switch">
-          <?= '🌍​' ?>
+          <?= '🌍' ?>
         </button>
       </form>
       <form action="" method="post">
@@ -249,9 +254,9 @@ if (isset($_POST["giris"])) {
         <input type="password" name="uye_sifre" placeholder="<?= $language === 'tr' ? 'Şifreniz' : 'Your password' ?>" required>
         <button type="submit" name="giris"><?= $language === 'tr' ? 'Giriş Yap' : 'Login' ?></button>
       </form>
-      <a href="uyeKayit.php" style="margin-top:25px"><?= $language === 'tr' ? 'Hesabınız yok mu? Kayıt olun' : "Don't have an account? Sign up" ?></a>
-      <a href="forgot_password.php" style="margin-top:25px"><?= $language === 'tr' ? 'Şifremi Unuttum' : "Forgot Password" ?></a>
-      <a href="anaSayfa.php" style="margin-top:25px"><?= $language === 'tr' ? 'Ana Sayfaya Dön' : 'Back to Home' ?></a>
+      <a href="forgot_password.php" style="margin-top:15px;"><?= $language === 'tr' ? 'Şifremi Unuttum' : 'Forgot Password?' ?></a>
+      <a href="uyeKayit.php" style="margin-top:25px;"><?= $language === 'tr' ? 'Hesabınız yok mu? Kayıt olun' : "Don't have an account? Sign up" ?></a>
+      <a href="anaSayfa.php" style="margin-top:25px;"><?= $language === 'tr' ? 'Ana Sayfaya Dön' : 'Back to Home' ?></a>
     </div>
   </div>
 

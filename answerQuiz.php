@@ -2,24 +2,38 @@
 require_once("connection.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $quiz_id = intval($_POST['quiz_id']);
-    $user_id = intval($_POST['user_id']);
-    $answer = $_POST['answer'];
+    $session_code = $_POST['session_code'];
+    $type = $_POST['type'];
+    $question = trim($_POST['question']);
+    $correct = $_POST['correct'];
 
-    // Önceden cevap verdiyse güncelle
-    $check = $conn->prepare("SELECT id FROM quiz_answers WHERE quiz_id=? AND user_id=?");
-    $check->bind_param("ii", $quiz_id, $user_id);
-    $check->execute();
-    $result = $check->get_result();
-
-    if ($row = $result->fetch_assoc()) {
-        $update = $conn->prepare("UPDATE quiz_answers SET answer=? WHERE id=?");
-        $update->bind_param("si", $answer, $row['id']);
-        $update->execute();
-    } else {
-        $insert = $conn->prepare("INSERT INTO quiz_answers (quiz_id, user_id, answer) VALUES (?, ?, ?)");
-        $insert->bind_param("iis", $quiz_id, $user_id, $answer);
-        $insert->execute();
+    // session_code'dan session_id çek
+    $stmt = $conn->prepare("SELECT id FROM sessions WHERE session_code = ?");
+    $stmt->bind_param("s", $session_code);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    if (!$row = $res->fetch_assoc()) {
+        echo json_encode(['success' => false, 'message' => 'Oturum bulunamadı']);
+        exit;
     }
-    echo "ok";
+    $session_id = $row['id'];
+
+    // Quiz ekle
+    $stmt = $conn->prepare("INSERT INTO quiz (session_id, question, type, correct_answer) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("isss", $session_id, $question, $type, $correct);
+    $stmt->execute();
+    $quiz_id = $stmt->insert_id;
+
+    // Çoktan seçmeli ise şıkları ekle
+    if ($type == "coktan") {
+        foreach (['A', 'B', 'C', 'D'] as $key) {
+            if (isset($_POST[$key]) && trim($_POST[$key]) != "") {
+                $opt = trim($_POST[$key]);
+                $stmt2 = $conn->prepare("INSERT INTO quiz_options (quiz_id, option_key, option_text) VALUES (?, ?, ?)");
+                $stmt2->bind_param("iss", $quiz_id, $key, $opt);
+                $stmt2->execute();
+            }
+        }
+    }
+    echo json_encode(['success' => true]);
 }
