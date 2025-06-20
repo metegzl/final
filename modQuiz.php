@@ -287,11 +287,11 @@ $sessionCode = $_SESSION['current_session_code'];
                 <input type="radio" name="question-type" value="dogruyanlis"> Doğru / Yanlış
             </label>
             <br>
-            <button id="continue-btn" class="submit-btn" style="margin-top:18px;">Devam Et</button>
+            <button id="continue-btn" class="submit-btn" style="margin-top:25px; margin-left:70px">Devam Et</button>
         </div>
         <form id="question-form">
             <div id="question-area"></div>
-            <button type="submit" class="submit-btn">Gönder</button>
+            <button type="submit" class="submit-btn" style="margin-left:40px">Gönder</button>
         </form>
         <div id="quiz-list"></div>
     </div>
