@@ -10,7 +10,6 @@ if (!isset($_SESSION['uye_id'])) {
 $createdBy = $_SESSION['uye_id'];
 $sessionCode = null;
 
-// Aktif oturumu kontrol et
 $checkStmt = $conn->prepare("SELECT session_code FROM sessions WHERE created_by = ? AND is_active = 1");
 $checkStmt->bind_param("i", $createdBy);
 $checkStmt->execute();
@@ -35,20 +34,16 @@ if ($row = $result->fetch_assoc()) {
     $_SESSION['current_session_code'] = $sessionCode;
 
     $stmt = $conn->prepare(
-        "INSERT INTO sessions (session_code, created_by, chatwall, quiz, is_active) VALUES (?, ?, ?, ?, 1)"
-    );
+            "INSERT INTO sessions (session_code, created_by, chatwall, quiz, is_active) VALUES (?, ?, ?, ?, 1)"
+        );
     $stmt->bind_param("siii", $sessionCode, $createdBy, $chatwall, $quiz);
 
     if (!$stmt->execute()) {
         die("Veritabanına kayıt yapılamadı: " . $stmt->error);
     }
-
     $stmt->close();
 }
-
-$conn->close();
 ?>
-
 <!DOCTYPE html>
 <html lang="tr">
 
@@ -188,7 +183,7 @@ $conn->close();
         .container {
             background-color: #eee9e9;
             color: #333;
-            border-left: 8px solidrgb(244, 241, 66);
+            border-left: 8px solid rgb(244, 241, 66);
             padding: 28px 40px;
             border-radius: 12px;
             margin: 0 auto;
@@ -272,42 +267,6 @@ $conn->close();
         .end-button:hover {
             background: #a52823;
         }
-
-        @media (max-width: 900px) {
-            .sidebar {
-                width: 180px;
-                padding: 12px 4px;
-            }
-
-            .logo-combined {
-                font-size: 18px;
-                padding: 8px 7px 8px 5px;
-            }
-
-            .logo-icon {
-                width: 30px;
-                height: 30px;
-            }
-
-            .logo-button {
-                font-size: 15px;
-            }
-
-            .menu a {
-                font-size: 17px;
-                padding: 7px;
-            }
-
-            .container {
-                max-width: 96vw;
-                padding: 15px 7px;
-                margin-top: 22px;
-            }
-
-            h1 {
-                font-size: 19px;
-            }
-        }
     </style>
 </head>
 
@@ -363,6 +322,29 @@ $conn->close();
                 <div class="code-box">
                     Aktif Oturum Kodu: <?php echo htmlspecialchars($sessionCode); ?>
                 </div>
+                <?php
+                $stmt = $conn->prepare("SELECT id FROM sessions WHERE session_code = ?");
+                $stmt->bind_param("s", $sessionCode);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $sid = null;
+                if ($row = $result->fetch_assoc()) {
+                    $sid = $row['id'];
+                }
+                $stmt->close();
+                $count = 0;
+                if ($sid) {
+                    $stmt2 = $conn->prepare("SELECT COUNT(*) as cnt FROM session_attendees WHERE session_id = ?");
+                    $stmt2->bind_param("i", $sid);
+                    $stmt2->execute();
+                    $result2 = $stmt2->get_result();
+                    if ($row2 = $result2->fetch_assoc()) {
+                        $count = $row2['cnt'];
+                    }
+                    $stmt2->close();
+                }
+                echo "<div style='margin-top:22px;font-size:20px;color:#1a237e;font-weight:bold;'>Katılımcı Sayısı: $count</div>";
+                ?>
                 <form action="endSession.php" method="post" style="text-align: center;">
                     <input type="hidden" name="session_code" value="<?php echo htmlspecialchars($sessionCode); ?>">
                     <button type="submit" class="button end-button">Oturumu Sonlandır</button>
@@ -373,3 +355,6 @@ $conn->close();
 </body>
 
 </html>
+<?php
+$conn->close();
+?>

@@ -2,12 +2,12 @@
 session_start();
 require_once("connection.php");
 
-$language = isset($_SESSION['language']) ? $_SESSION['language'] : 'tr';
+$language = $_SESSION['language'] ?? 'tr';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['language'])) {
   $language = $_SESSION['language'] = $_POST['language'];
 }
 
-$theme = isset($_SESSION['theme']) ? $_SESSION['theme'] : 'dark';
+$theme = $_SESSION['theme'] ?? 'dark';
 if (isset($_POST['theme'])) {
   $theme = $_SESSION['theme'] = $_POST['theme'];
 }
@@ -16,41 +16,43 @@ $message = "";
 $messageType = "";
 
 if (isset($_POST["kaydet"])) {
-  $uye_adi = $_POST["uye_adi"];
-  $uye_soyadi = $_POST["uye_soyadi"];
-  $uye_mail = $_POST["uye_mail"];
-  $uye_sifre = password_hash($_POST["uye_sifre"], PASSWORD_DEFAULT);
+  $uye_adi    = trim($_POST["uye_adi"]);
+  $uye_soyadi = trim($_POST["uye_soyadi"]);
+  $uye_mail   = $_POST["uye_mail"];
+  $uye_sifre  = password_hash($_POST["uye_sifre"], PASSWORD_DEFAULT);
 
-  // E-posta kontrolü
-  $sql = "SELECT * FROM uyeler WHERE uye_mail = ?";
-  $stmt = $conn->prepare($sql);
-  $stmt->bind_param("s", $uye_mail);
-  $stmt->execute();
-  $result = $stmt->get_result();
-
-  if ($result->num_rows > 0) {
-    $message = "Bu Kullanıcı Zaten Mevcut.";
+  $onlyLetters = '/^[\p{L}\s]+$/u';
+  if (!preg_match($onlyLetters, $uye_adi) || !preg_match($onlyLetters, $uye_soyadi)) {
+    $message     = "Ad ve Soyad alanlarına yalnızca harf girebilirsiniz.";
     $messageType = "error";
   } else {
-    // Yeni kullanıcı ekleme
-    $sql = "INSERT INTO uyeler (uye_adi, uye_soyadi, uye_mail, uye_sifre)
-                VALUES (?, ?, ?, ?)";
+    $sql = "SELECT 1 FROM uyeler WHERE uye_mail = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssss", $uye_adi, $uye_soyadi, $uye_mail, $uye_sifre);
+    $stmt->bind_param("s", $uye_mail);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if ($stmt->execute()) {
-      $message = "Kullanıcı başarıyla eklendi.";
-      $messageType = "success";
-    } else {
-      $message = "Hata: " . $stmt->error;
+    if ($result->num_rows > 0) {
+      $message     = "Bu kullanıcı zaten mevcut.";
       $messageType = "error";
-    }
-  }
+    } else {
+      $sql = "INSERT INTO uyeler (uye_adi, uye_soyadi, uye_mail, uye_sifre)
+                  VALUES (?, ?, ?, ?)";
+      $stmt = $conn->prepare($sql);
+      $stmt->bind_param("ssss", $uye_adi, $uye_soyadi, $uye_mail, $uye_sifre);
 
-  $stmt->close();
+      if ($stmt->execute()) {
+        $message     = "Kullanıcı başarıyla eklendi.";
+        $messageType = "success";
+      } else {
+        $message     = "Hata: " . $stmt->error;
+        $messageType = "error";
+      }
+    }
+    $stmt->close();
+  }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="<?= $language ?>">
 
@@ -58,21 +60,7 @@ if (isset($_POST["kaydet"])) {
   <meta charset="UTF-8">
   <title><?= $language === 'tr' ? 'Kayıt Ol' : 'Sign Up' ?></title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script>
-    window.addEventListener("DOMContentLoaded", function() {
-      const messageBox = document.getElementById("messageBox");
-      if (messageBox) {
-        setTimeout(() => {
-          messageBox.style.transition = "opacity 0.5s ease";
-          messageBox.style.opacity = "0";
-          setTimeout(() => messageBox.remove(), 500); // tamamen silinsin
-        }, 4000); // 4 saniye sonra başlasın
-      }
-    });
-  </script>
-
   <style>
     body {
       margin: 0;
@@ -113,8 +101,6 @@ if (isset($_POST["kaydet"])) {
     .logo-button {
       display: inline-block;
       background-color: rgba(244, 124, 44, 0.82);
-
-      /* Buton rengi */
       color: whitesmoke;
       padding: 7.5px 20px;
       margin-left: 10px;
@@ -224,15 +210,11 @@ if (isset($_POST["kaydet"])) {
       color: #000000;
       padding: 10px 20px;
       margin: 20px auto;
-      /* Ortalamak için */
       border-radius: 6px;
       text-align: center;
       width: fit-content;
-      /* İçeriğe göre genişlik */
       max-width: 90%;
-      /* Taşmayı önlemek için */
       box-shadow: 0 2px 6px rgba(255, 0, 0, 0.1);
-      /* Daha hoş görünüm */
       font-size: 14px;
     }
 
@@ -241,15 +223,11 @@ if (isset($_POST["kaydet"])) {
       color: rgb(103, 93, 93);
       padding: 10px 20px;
       margin: 20px auto;
-      /* Ortalamak için */
       border-radius: 6px;
       text-align: center;
       width: fit-content;
-      /* İçeriğe göre genişlik */
       max-width: 90%;
-      /* Taşmayı önlemek için */
       box-shadow: 0 2px 6px rgba(0, 255, 13, 0.15);
-      /* Daha hoş görünüm */
       font-size: 14px;
     }
 
@@ -276,128 +254,74 @@ if (isset($_POST["kaydet"])) {
       margin-top: 100px;
     }
   </style>
+  <script>
+    function validateForm() {
+      const nameRegex = /^[\p{L}\s]+$/u;
+      const form = document.forms[0];
+      const ad = form.uye_adi.value.trim();
+      const soyad = form.uye_soyadi.value.trim();
+
+      if (!nameRegex.test(ad) || !nameRegex.test(soyad)) {
+        alert('Ad ve Soyad alanlarına yalnızca harf girebilirsiniz.');
+        return false;
+      }
+      return true;
+    }
+  </script>
 </head>
 
 <body>
+  <header> … </header>
 
-  <!-- <?php if (isset($message)): ?>
-    <div class="message <?= $messageType ?>">
-        <?= htmlspecialchars($message) ?>
-    </div>
-<?php endif; ?> -->
-
-  <!-- HEADER -->
-  <header>
-    <div class="logo">
-      <img src="https://cdn.creazilla.com/emojis/49577/monkey-emoji-clipart-xl.png" width="55px" height="55px" class="logo-icon" style="margin-left: 50px;" />
-      <a href="anasayfa.php" class="logo-button">QuestionLive</a>
-    </div>
-    <div class="menu">
-      <form action="" method="post">
-        <button type="submit" name="language" value="<?= $language === 'tr' ? 'en' : 'tr' ?>" class="language-switch">
-          <?= '🌍​' ?>
-        </button>
-      </form>
-      <form action="" method="post">
-        <button type="submit" name="theme" value="<?= $theme === 'dark' ? 'light' : 'dark' ?>" class="theme-switch">
-          <?= $theme === 'dark' ? '🌞' : '🌙' ?>
-        </button>
-      </form>
-    </div>
-  </header>
-
-  <!-- MAIN -->
   <div class="main">
     <div class="login-box">
       <h2><?= $language === 'tr' ? 'Üye Kayıt' : 'Sign Up' ?></h2>
-      <?php if (!empty($message)): ?>
+
+      <?php if ($message): ?>
         <div id="messageBox" class="<?= htmlspecialchars($messageType) ?>">
           <?= htmlspecialchars($message) ?>
         </div>
       <?php endif; ?>
 
-      <form action="" method="post">
-        <input type="text" name="uye_adi" placeholder="<?= $language === 'tr' ? 'Adınız' : 'First Name' ?>" required>
-        <input type="text" name="uye_soyadi" placeholder="<?= $language === 'tr' ? 'Soyadınız' : 'Last Name' ?>" required>
-        <input type="email" name="uye_mail" placeholder="<?= $language === 'tr' ? 'E-posta adresiniz' : 'Your email address' ?>" required>
-        <input type="password" name="uye_sifre" placeholder="<?= $language === 'tr' ? 'Şifreniz' : 'Your password' ?>" required>
+      <form action="" method="post" onsubmit="return validateForm();">
+        <input type="text" name="uye_adi"
+          pattern="[\p{L}\s]+"
+          title="Lütfen yalnızca harf kullanın"
+          placeholder="<?= $language === 'tr' ? 'Adınız' : 'First Name' ?>" required>
+
+        <input type="text" name="uye_soyadi"
+          pattern="[\p{L}\s]+"
+          title="Lütfen yalnızca harf kullanın"
+          placeholder="<?= $language === 'tr' ? 'Soyadınız' : 'Last Name' ?>" required>
+
+        <input type="email" name="uye_mail"
+          placeholder="<?= $language === 'tr' ? 'E-posta adresiniz' : 'Your email address' ?>" required>
+
+        <input type="password" name="uye_sifre"
+          placeholder="<?= $language === 'tr' ? 'Şifreniz' : 'Your password' ?>" required>
+
         <button type="submit" name="kaydet"><?= $language === 'tr' ? 'Kayıt Ol' : 'Sign Up' ?></button>
       </form>
-      <a href="uyeGiris.php"><?= $language === 'tr' ? 'Hesabınız var mı? Giriş Yapın' : "Don't have an account? Sign up" ?></a>
+
+      <a href="uyeGiris.php"><?= $language === 'tr'
+                                ? 'Hesabınız var mı? Giriş Yapın'
+                                : "Already have an account? Log in" ?></a>
       <a href="anaSayfa.php"><?= $language === 'tr' ? 'Ana Sayfaya Dön' : 'Back to Home' ?></a>
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <footer>
-    <h3><?= $language === 'tr' ? 'İletişim' : 'Contact' ?></h3>
-    <p><?= $language === 'tr' ? 'E-posta: destek@questionlive.com' : 'Email: destek@questionlive.com' ?></p>
-    <p><?= $language === 'tr' ? 'Telefon: +90 555 123 4567' : 'Phone: +90 555 123 4567' ?></p>
-    <p><?= $language === 'tr' ? 'Adres: İstanbul, Türkiye' : 'Address: Istanbul, Turkey' ?></p>
-    <div>
-      <a href="https://x.com/cristiano" target="_blank" style="margin-right: 20px;">
-        <i class="fab fa-x-twitter" style="font-size: 40px; color:rgb(0, 0, 0);"></i>
-      </a>
-
-      <a href="https://www.instagram.com/cristiano" target="_blank" style="margin-right: 20px;">
-        <i class="fab fa-instagram" style="font-size: 40px; color: #E4405F;"></i>
-      </a>
-
-      <a href="https://www.facebook.com/cristiano" target="_blank">
-        <i class="fab fa-facebook" style="font-size: 40px; color: #1877F2;"></i>
-      </a>
-    </div>
-  </footer>
+  <footer> … </footer>
 
   <?php if ($message): ?>
-    <div class="notification <?php echo $messageType; ?>">
-      <?php echo $message; ?>
-    </div>
     <script>
       setTimeout(() => {
-        document.querySelector('.notification').style.display = 'none';
+        document.querySelector('#messageBox')?.classList.add('hide');
         <?php if ($messageType === "success"): ?>
-          window.location.href = "uyeGiris.php";
+          setTimeout(() => location.href = "uyeGiris.php", 600);
         <?php endif; ?>
-      }, 3000);
+      }, 4000);
     </script>
   <?php endif; ?>
-
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-  <script>
-    function validateForm() {
-      const form = document.forms[0];
-      const inputs = form.getElementsByTagName('input');
-      for (let input of inputs) {
-        if (input.value.trim() === '') {
-          alert('Lütfen tüm alanları doldurunuz.');
-          return false;
-        }
-      }
-      return true;
-    }
-
-    const togglePassword = document.getElementById("togglePassword");
-    const password = document.getElementById("password");
-
-    togglePassword.addEventListener("click", function() {
-      const type = password.getAttribute("type") === "password" ? "text" : "password";
-      password.setAttribute("type", type);
-      this.name = this.name === "eye-outline" ? "eye-off-outline" : "eye-outline";
-    });
-  </script>
-  <script>
-    window.addEventListener("DOMContentLoaded", function() {
-      const messageBox = document.getElementById("messageBox");
-      if (messageBox) {
-        setTimeout(() => {
-          messageBox.classList.add("hide");
-        }, 5000);
-      }
-    });
-  </script>
-
 </body>
 
 </html>

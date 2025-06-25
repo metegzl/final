@@ -2,7 +2,6 @@
 session_start();
 require_once("connection.php");
 
-/* Oturum kodu yoksa */
 if (!isset($_SESSION['current_session_code'])) {
     echo "<script>
             alert('Oturum kodu belirtilmedi.');

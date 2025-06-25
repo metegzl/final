@@ -7,7 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $question = trim($_POST['question']);
     $correct = $_POST['correct'];
 
-    // session_code'dan session_id çek
     $stmt = $conn->prepare("SELECT id FROM sessions WHERE session_code = ?");
     $stmt->bind_param("s", $session_code);
     $stmt->execute();
@@ -18,13 +17,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $session_id = $row['id'];
 
-    // Quiz ekle
     $stmt = $conn->prepare("INSERT INTO quiz (session_id, question, type, correct_answer) VALUES (?, ?, ?, ?)");
     $stmt->bind_param("isss", $session_id, $question, $type, $correct);
     $stmt->execute();
     $quiz_id = $stmt->insert_id;
 
-    // Çoktan seçmeli ise şıkları ekle
     if ($type == "coktan") {
         foreach (['A', 'B', 'C', 'D'] as $key) {
             if (isset($_POST[$key]) && trim($_POST[$key]) != "") {

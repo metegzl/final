@@ -2,7 +2,6 @@
 session_start();
 require_once("connection.php");
 
-/* Oturum kodu yoksa */
 if (!isset($_SESSION['current_session_code'])) {
     echo "<script>
             alert('Oturum kodu belirtilmedi.');
@@ -10,15 +9,20 @@ if (!isset($_SESSION['current_session_code'])) {
           </script>";
     exit;
 }
-
+if (!isset($_SESSION['uye_adi'])) {
+    echo "<script>
+            alert('Giriş bilgisi eksik.');
+            window.location.href = 'anasayfa.php';
+          </script>";
+    exit;
+}
+$modAd = $_SESSION['uye_adi'];
 $sessionCode = $_SESSION['current_session_code'];
 
-/* chatwall yetkisini sorgula */
-$stmt = $conn->prepare("SELECT chatwall FROM sessions WHERE session_code = ?");
+$stmt = $conn->prepare("SELECT id, chatwall FROM sessions WHERE session_code = ?");
 $stmt->bind_param("s", $sessionCode);
 $stmt->execute();
 $result = $stmt->get_result();
-
 if ($row = $result->fetch_assoc()) {
     if ($row['chatwall'] != 1) {
         echo "<script>
@@ -27,6 +31,7 @@ if ($row = $result->fetch_assoc()) {
               </script>";
         exit;
     }
+    $sessionId = $row['id'];
 } else {
     echo "<script>
             alert('Geçersiz oturum kodu.');
@@ -35,7 +40,6 @@ if ($row = $result->fetch_assoc()) {
     exit;
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="tr">
 
@@ -206,7 +210,7 @@ if ($row = $result->fetch_assoc()) {
         #chat-form input {
             padding: 10px;
             font-size: 16px;
-            width: 30%;
+            width: 90%;
         }
 
         #chat-form button {
@@ -272,15 +276,15 @@ if ($row = $result->fetch_assoc()) {
         <h2>Chat - Oturum: <?php echo htmlspecialchars($sessionCode); ?></h2>
         <div id="chat-container">
             <div id="chat-box"></div>
-            <form id="chat-form">
-                <input type="text" id="user_name" placeholder="Adınız" required>
+            <form id="chat-form" autocomplete="off">
                 <input type="text" id="message" placeholder="Mesajınız" required>
                 <button type="submit">Gönder</button>
             </form>
         </div>
     </div>
     <script>
-        const sessionId = "<?php echo htmlspecialchars($sessionCode); ?>";
+        const sessionId = "<?php echo htmlspecialchars($sessionId); ?>";
+        const userName = <?php echo json_encode($modAd); ?>;
 
         function loadMessages() {
             fetch('loadMessages.php?session_id=' + sessionId + '&mod=1')
@@ -293,12 +297,11 @@ if ($row = $result->fetch_assoc()) {
         }
         loadMessages();
         setInterval(loadMessages, 3000);
+
         document.getElementById('chat-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            const name = document.getElementById('user_name').value.trim();
             const msg = document.getElementById('message').value.trim();
-            // JS kontrol: isimde mod veya yıldız olmasın
-            if (name.toLowerCase().includes('mod') || name.includes('★')) {
+            if (userName.toLowerCase().includes('mod') || userName.includes('★')) {
                 alert('Kullanıcı adında MOD veya yıldız sembolü kullanamazsınız!');
                 return;
             }
@@ -308,7 +311,7 @@ if ($row = $result->fetch_assoc()) {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
                     body: 'session_id=' + encodeURIComponent(sessionId) +
-                        '&user_name=' + encodeURIComponent(name) +
+                        '&user_name=' + encodeURIComponent(userName) +
                         '&message=' + encodeURIComponent(msg) +
                         '&is_mod=1'
                 }).then(r => r.json())
@@ -321,7 +324,7 @@ if ($row = $result->fetch_assoc()) {
                     }
                 });
         });
-        // Sil butonları için
+
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('delete-btn')) {
                 const msgId = e.target.getAttribute('data-id');

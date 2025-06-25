@@ -147,7 +147,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="reset-box">
         <h2><?= $language === 'tr' ? 'Yeni Şifre Belirle' : 'Set New Password' ?></h2>
 
-        <?php if (!empty($error)): ?>
+        <?php
+        if (!empty($error)):
+        ?>
             <div class="error"><?= htmlspecialchars($error) ?></div>
         <?php elseif (!empty($success)): ?>
             <div class="success">

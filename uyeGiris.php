@@ -222,7 +222,6 @@ if (isset($_POST["giris"])) {
 
 <body>
 
-  <!-- HEADER -->
   <header>
     <div class="logo">
       <img src="https://cdn.creazilla.com/emojis/49577/monkey-emoji-clipart-xl.png" width="55px" height="55px" class="logo-icon" style="margin-left: 50px;" />
@@ -242,7 +241,6 @@ if (isset($_POST["giris"])) {
     </div>
   </header>
 
-  <!-- MAIN -->
   <div class="main">
     <div class="login-box">
       <h2><?= $language === 'tr' ? 'Üye Giriş' : 'Member Login' ?></h2>
@@ -260,7 +258,6 @@ if (isset($_POST["giris"])) {
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer>
     <h3><?= $language === 'tr' ? 'İletişim' : 'Contact' ?></h3>
     <p><?= $language === 'tr' ? 'E-posta: destek@questionlive.com' : 'Email: destek@questionlive.com' ?></p>

@@ -66,7 +66,6 @@ if (isset($_SESSION["giris_basarili"]) && $_SESSION["giris_basarili"] === true) 
       display: inline-block;
       background-color: rgba(244, 124, 44, 0.82);
 
-      /* Buton rengi */
       color: whitesmoke;
       padding: 7.5px 20px;
       margin-left: 10px;
@@ -144,22 +143,8 @@ if (isset($_SESSION["giris_basarili"]) && $_SESSION["giris_basarili"] === true) 
       max-width: 700px;
     }
 
-    /* .main .discover-btn {
-      margin-top: 30px;
-      padding: 15px 30px;
-      background-color: #f47c2c;
-      color: #000;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .discover-btn:hover {
-      background-color: #da6d23;
-    } */
-
     .actions {
+
       display: flex;
       justify-content: center;
       gap: 40px;
@@ -217,11 +202,9 @@ if (isset($_SESSION["giris_basarili"]) && $_SESSION["giris_basarili"] === true) 
     .toast {
       position: fixed;
       top: 30px;
-      /* sayfanın en üstünden boşluk */
       left: 50%;
       transform: translateX(-50%);
       background-color: #4CAF50;
-      /* yeşil hoşgeldin kutusu */
       color: white;
       padding: 15px 30px;
       border-radius: 8px;
@@ -363,7 +346,7 @@ if (isset($_SESSION["giris_basarili"]) && $_SESSION["giris_basarili"] === true) 
 
   <footer>
     <h3><?= $language === 'tr' ? 'İletişim' : 'Contact' ?></h3>
-    <p><?= $language === 'tr' ? 'E-posta: destek@questionlive.com' : 'Email: destek@questionlive.com' ?></p>
+    <p><?= $language === 'tr' ? 'E-posta: destek.questionlive@gmail.com' : 'Email: destek.questionlive@gmail.com' ?></p>
     <p><?= $language === 'tr' ? 'Telefon: +90 555 123 4567' : 'Phone: +90 555 123 4567' ?></p>
     <p><?= $language === 'tr' ? 'Adres: İstanbul, Türkiye' : 'Address: Istanbul, Turkey' ?></p>
     <div>

@@ -2,7 +2,6 @@
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Kullanıcı çıkışa onay verdi
     $_SESSION = array();
     session_destroy();
     header("Location: anasayfa.php");

@@ -72,7 +72,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Sifremi Unuttum</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
-        /* Aynı css kodlarin buraya gelecek, oncekiyle ayni */
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;

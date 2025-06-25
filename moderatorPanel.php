@@ -2,20 +2,21 @@
 session_start();
 require_once("connection.php");
 
-// Oturum ID (gerçek sistemde session'dan alınmalı)
 $session_id = $_SESSION['session_id'] ?? 1;
 
-// Kullanıcıları çekmek için AJAX endpoint
 if (isset($_GET['api']) && $_GET['api'] === 'users') {
   $result = $conn->query("SELECT uye_id, uye_adi, uye_soyadi, uye_mail, is_admin FROM uyeler ORDER BY uye_id DESC");
   $users = [];
-  while ($row = $result->fetch_assoc()) $users[] = $row;
+
+  while ($row = $result->fetch_assoc()) {
+    $users[] = $row;
+  }
+
   header('Content-Type: application/json');
   echo json_encode($users);
   exit;
 }
 
-// Kullanıcı silmek için AJAX endpoint
 if (isset($_POST['delete_user_id'])) {
   $id = intval($_POST['delete_user_id']);
   $success = $conn->query("DELETE FROM uyeler WHERE uye_id = $id");
@@ -23,7 +24,6 @@ if (isset($_POST['delete_user_id'])) {
   exit;
 }
 
-// Kullanıcı güncellemek için AJAX endpoint
 if (isset($_POST['update_user'])) {
   $data = json_decode($_POST['update_user'], true);
   $id = intval($data['uye_id']);
@@ -31,19 +31,18 @@ if (isset($_POST['update_user'])) {
   $soyadi = $conn->real_escape_string($data['uye_soyadi']);
   $mail = $conn->real_escape_string($data['uye_mail']);
   $is_admin = intval($data['is_admin']);
+
   $success = $conn->query("UPDATE uyeler SET uye_adi='$adi', uye_soyadi='$soyadi', uye_mail='$mail', is_admin=$is_admin WHERE uye_id=$id");
   echo json_encode(['success' => $success]);
   exit;
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="tr">
 
 <head>
   <meta charset="UTF-8">
   <title>Moderatör Paneli</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -82,11 +81,6 @@ if (isset($_POST['update_user'])) {
 
     .tab-content.active {
       display: block;
-    }
-
-    .chart-container {
-      width: 80%;
-      margin: auto;
     }
 
     table {
@@ -142,6 +136,10 @@ if (isset($_POST['update_user'])) {
       width: 80px;
     }
 
+    .edit-mode [data-field="uye_mail"] input {
+      width: 220px !important;
+    }
+
     .header-actions {
       margin-left: auto;
       display: flex;
@@ -170,13 +168,10 @@ if (isset($_POST['update_user'])) {
 
 <body>
 
-  <!-- SEKME MENÜSÜ + SAĞ ÜST BUTON -->
   <div class="tabs-container">
     <div class="tabs">
-      <div class="tab active" onclick="showTab('panic')">Panic</div>
-      <div class="tab" onclick="showTab('chatwall')">Chatwall</div>
+      <div class="tab active" onclick="showTab('chatwall')">Chatwall</div>
       <div class="tab" onclick="showTab('quiz')">Quiz</div>
-      <div class="tab" onclick="showTab('session')">Session</div>
       <div class="tab" onclick="showTab('users')">Kullanıcılar</div>
     </div>
     <div class="header-actions">
@@ -184,59 +179,15 @@ if (isset($_POST['update_user'])) {
     </div>
   </div>
 
-  <!-- PANIC SEKME İÇERİĞİ -->
-  <div id="panic" class="tab-content active">
-    <h1>Panik Geri Bildirimleri (Oturum: <?= htmlspecialchars($session_id) ?>)</h1>
-    <div class="chart-container">
-      <canvas id="panicChart"></canvas>
-    </div>
-    <table id="feedbackTable">
-      <tr>
-        <th>Geri Bildirim Türü</th>
-        <th>Adet</th>
-      </tr>
-      <tr>
-        <td>Çok hızlı</td>
-        <td id="too_fast">0</td>
-      </tr>
-      <tr>
-        <td>Çok yavaş</td>
-        <td id="too_slow">0</td>
-      </tr>
-      <tr>
-        <td>Çok sessiz</td>
-        <td id="too_quiet">0</td>
-      </tr>
-      <tr>
-        <td>Örnek verin</td>
-        <td id="example">0</td>
-      </tr>
-      <tr>
-        <td>Son slayt tekrar</td>
-        <td id="last_slide">0</td>
-      </tr>
-      <tr>
-        <td>Panik</td>
-        <td id="panic">0</td>
-      </tr>
-    </table>
-  </div>
-
-  <!-- CHATWALL SEKME İÇERİĞİ -->
-  <div id="chatwall" class="tab-content">
+  <div id="chatwall" class="tab-content active">
     <h2>Chatwall Mesajları (Oturum: <?= htmlspecialchars($session_id) ?>)</h2>
     <ul id="messageList"></ul>
   </div>
 
-  <!-- DİĞER SEKME BOŞLUKLARI -->
   <div id="quiz" class="tab-content">
     <p>Quiz gelecektir.</p>
   </div>
-  <div id="session" class="tab-content">
-    <p>Session yönetimi gelecektir.</p>
-  </div>
 
-  <!-- KULLANICI YÖNETİMİ SEKME İÇERİĞİ -->
   <div id="users" class="tab-content">
     <h2>Kayıtlı Kullanıcılar</h2>
     <table id="usersTable">
@@ -254,59 +205,20 @@ if (isset($_POST['update_user'])) {
     </table>
   </div>
 
-  <!-- SCRIPT -->
   <script>
     function showTab(tabId) {
       document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
       document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
       document.getElementById(tabId).classList.add('active');
-      if (tabId === "users") loadUsers();
-    }
 
-    // === PANIC CHART ===
-    const sessionId = <?= json_encode($session_id) ?>;
-    const chartCtx = document.getElementById('panicChart').getContext('2d');
-    const panicChart = new Chart(chartCtx, {
-      type: 'bar',
-      data: {
-        labels: ['Çok hızlı', 'Çok yavaş', 'Çok sessiz', 'Örnek verin', 'Son slayt tekrar', 'Panik'],
-        datasets: [{
-          label: 'Geri Bildirim Sayısı',
-          data: [0, 0, 0, 0, 0, 0],
-          backgroundColor: '#f47c2c'
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-            stepSize: 1
-          }
-        }
+      if (tabId === "users") {
+        loadUsers();
       }
-    });
-
-    function updatePanicData() {
-      fetch(`get_feedback_data.php?session_id=${sessionId}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.error) return;
-          const types = ['too_fast', 'too_slow', 'too_quiet', 'example', 'last_slide', 'panic'];
-          const chartData = [];
-
-          types.forEach(type => {
-            const count = data[type] || 0;
-            chartData.push(count);
-            document.getElementById(type).textContent = count;
-          });
-
-          panicChart.data.datasets[0].data = chartData;
-          panicChart.update();
-        });
     }
 
-    // === CHATWALL ===
+    const sessionId = <?= json_encode($session_id) ?>;
+
     function getChatMessages() {
       fetch(`getChatMessages.php?session_id=${sessionId}`)
         .then(res => res.json())
@@ -317,9 +229,9 @@ if (isset($_POST['update_user'])) {
           messages.forEach(msg => {
             const li = document.createElement("li");
             li.innerHTML = `
-          <span>${msg.message}</span>
-          <button onclick="deleteMessage(${msg.id}, this)">Sil</button>
-        `;
+                            <span>${msg.message}</span>
+                            <button onclick="deleteMessage(${msg.id}, this)">Sil</button>
+                        `;
             list.appendChild(li);
           });
         });
@@ -342,15 +254,10 @@ if (isset($_POST['update_user'])) {
     }
 
     setInterval(() => {
-      updatePanicData();
       getChatMessages();
     }, 1000);
 
-    updatePanicData();
     getChatMessages();
-
-
-    // === KULLANICI YÖNETİMİ ===
 
     function loadUsers() {
       fetch('?api=users')
@@ -360,20 +267,20 @@ if (isset($_POST['update_user'])) {
           tbody.innerHTML = '';
           users.forEach(user => {
             tbody.innerHTML += `
-          <tr data-id="${user.uye_id}">
-            <td>${user.uye_id}</td>
-            <td><span class="editable" data-field="uye_adi">${user.uye_adi}</span></td>
-            <td><span class="editable" data-field="uye_soyadi">${user.uye_soyadi}</span></td>
-            <td><span class="editable" data-field="uye_mail">${user.uye_mail}</span></td>
-            <td><span class="editable" data-field="is_admin">${user.is_admin == 1 ? "Evet" : "Hayır"}</span></td>
-            <td>
-              <button onclick="deleteUser(${user.uye_id}, this)">Sil</button>
-              <button onclick="editUser(this)">Düzenle</button>
-              <button class="saveBtn" onclick="saveUser(${user.uye_id}, this)" style="display:none;">Kaydet</button>
-              <button class="cancelBtn" onclick="cancelEdit(this)" style="display:none;">Vazgeç</button>
-            </td>
-          </tr>
-        `;
+                            <tr data-id="${user.uye_id}">
+                                <td>${user.uye_id}</td>
+                                <td><span class="editable" data-field="uye_adi">${user.uye_adi}</span></td>
+                                <td><span class="editable" data-field="uye_soyadi">${user.uye_soyadi}</span></td>
+                                <td><span class="editable" data-field="uye_mail">${user.uye_mail}</span></td>
+                                <td><span class="editable" data-field="is_admin">${user.is_admin == 1 ? "Evet" : "Hayır"}</span></td>
+                                <td>
+                                    <button onclick="deleteUser(${user.uye_id}, this)">Sil</button>
+                                    <button onclick="editUser(this)">Düzenle</button>
+                                    <button class="saveBtn" onclick="saveUser(${user.uye_id}, this)" style="display:none;">Kaydet</button>
+                                    <button class="cancelBtn" onclick="cancelEdit(this)" style="display:none;">Vazgeç</button>
+                                </td>
+                            </tr>
+                        `;
           });
         });
     }
@@ -400,22 +307,25 @@ if (isset($_POST['update_user'])) {
     function editUser(btn) {
       const tr = btn.closest('tr');
       tr.classList.add('edit-mode');
+
       tr.querySelectorAll('.editable').forEach(span => {
         const field = span.dataset.field;
         let val = span.textContent;
+
         if (field === "is_admin") {
           span.innerHTML = `
-        <select>
-          <option value="0"${val.trim() == "Hayır" ? " selected" : ""}>Hayır</option>
-          <option value="1"${val.trim() == "Evet" ? " selected" : ""}>Evet</option>
-        </select>
-      `;
+                        <select>
+                            <option value="0"${val.trim() == "Hayır" ? " selected" : ""}>Hayır</option>
+                            <option value="1"${val.trim() == "Evet" ? " selected" : ""}>Evet</option>
+                        </select>
+                    `;
         } else {
           span.innerHTML = `<input type="text" value="${val}">`;
         }
       });
-      tr.querySelector(".saveBtn").style.display = "";
-      tr.querySelector(".cancelBtn").style.display = "";
+
+      tr.querySelector('[data-field="uye_mail"] input').style.width = "220px";
+      tr.querySelectorAll(".saveBtn, .cancelBtn").forEach(b => b.style.display = "inline-block");
       btn.style.display = "none";
     }
 
@@ -426,6 +336,7 @@ if (isset($_POST['update_user'])) {
     function saveUser(id, btn) {
       const tr = btn.closest('tr');
       const fields = {};
+
       tr.querySelectorAll('.editable').forEach(span => {
         const field = span.dataset.field;
         if (field === "is_admin") {
@@ -434,23 +345,26 @@ if (isset($_POST['update_user'])) {
           fields[field] = span.querySelector('input').value;
         }
       });
+
       fields.uye_id = id;
+
       fetch("", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: "update_user=" + encodeURIComponent(JSON.stringify(fields))
-      }).then(res => res.json()).then(data => {
-        if (data.success) {
-          loadUsers();
-        } else {
-          alert("Güncellenemedi!");
-        }
-      });
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: "update_user=" + encodeURIComponent(JSON.stringify(fields))
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            loadUsers();
+          } else {
+            alert("Güncellenemedi!");
+          }
+        });
     }
   </script>
-
 </body>
 
 </html>

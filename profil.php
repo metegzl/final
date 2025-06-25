@@ -11,7 +11,6 @@ $uye_id = $_SESSION['uye_id'];
 $mesaj = "";
 $mesaj_turu = "";
 
-// Kullanıcı bilgilerini al
 $sql = "SELECT uye_adi, uye_soyadi, uye_mail, uye_sifre FROM uyeler WHERE uye_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $uye_id);
@@ -19,7 +18,6 @@ $stmt->execute();
 $result = $stmt->get_result();
 $uye = $result->fetch_assoc();
 
-// Şifre güncelleme işlemi
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mevcutSifre = $_POST['mevcut_sifre'] ?? '';
     $yeniSifre = $_POST['yeni_sifre'] ?? '';
@@ -122,8 +120,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .logo-button {
             display: inline-block;
             background-color: rgba(244, 124, 44, 0.82);
-
-            /* Buton rengi */
             color: whitesmoke;
             padding: 7.5px 20px;
             margin-left: 10px;

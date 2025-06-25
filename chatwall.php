@@ -1,44 +1,4 @@
-<?php
-session_start();
-require_once("connection.php");
-
-/* Oturum kodu yoksa */
-if (!isset($_SESSION['current_session_code'])) {
-    echo "<script>
-            alert('Oturum kodu belirtilmedi.');
-            window.location.href = 'createSession.php';
-          </script>";
-    exit;
-}
-
-$sessionCode = $_SESSION['current_session_code'];
-
-/* chatwall yetkisini sorgula */
-$stmt = $conn->prepare("SELECT chatwall FROM sessions WHERE session_code = ?");
-$stmt->bind_param("s", $sessionCode);
-$stmt->execute();
-$result = $stmt->get_result();
-
-/* Sonuç yok veya aktif değilse uyarı göster */
-if ($row = $result->fetch_assoc()) {
-    if ($row['chatwall'] != 1) {
-        echo "<script>
-                alert('Bu özellik bu oturumda aktif değil.');
-                window.location.href = 'createSession.php';
-              </script>";
-        exit;
-    }
-} else {
-    echo "<script>
-            alert('Geçersiz oturum kodu.');
-            window.location.href = 'createSession.php';
-          </script>";
-    exit;
-}
-?>
-
-
-<!DOCTYPE html>
+<!DOCTYPE html>More actions
 <html lang="tr">
 
 <head>
@@ -103,25 +63,21 @@ if ($row = $result->fetch_assoc()) {
         }
 
         .menu a {
-            font-size: 30px;
-            padding: 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            display: block;
+            width: 100%;
+            padding: 12px;
+            text-align: left;
             border: 3px solid #ccc;
             border-radius: 10px;
-            background: #fff;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
-            box-sizing: border-box;
             text-decoration: none;
+            background-color: #fff;
             font-weight: bold;
-            color: #007BFF;
-            transition: background .2s, box-shadow .2s;
+            box-sizing: border-box;
+            margin-bottom: 3px;
         }
 
         .menu a:hover {
-            background: #e0e0e0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, .35);
+            background-color: #e0e0e0;
         }
 
         .main-container {
@@ -152,7 +108,7 @@ if ($row = $result->fetch_assoc()) {
             border: 2px solid #ccc;
             overflow-y: scroll;
             padding: 20px;
-            background-color: rgb(164, 241, 255);
+            background-color: #ffdead;
             margin-bottom: 20px;
             border-radius: 5px;
         }
@@ -202,10 +158,13 @@ if ($row = $result->fetch_assoc()) {
         <div class="menu">
             <table class="menu">
                 <tr>
-                    <td><a href="chatwall.php">💬 Chat</a></td>
+                    <td><a href="chatwall.php">💬 Chatwall</a></td>
                 </tr>
                 <tr>
                     <td><a href="quiz.php">❔ Quiz</a></td>
+                </tr>
+                <tr>
+                    <td><a href="panic.php">❕ Panic</a></td>
                 </tr>
                 <tr>
                     <td><a href="createSession.php">🎓 Session</a></td>
@@ -215,6 +174,7 @@ if ($row = $result->fetch_assoc()) {
     </div>
 
     <div class="main-container">
+        <h2>Chat - Oturum: <?php echo htmlspecialchars($session_id); ?></h2>
         <h2>Chat - Oturum: <?php echo htmlspecialchars($sessionCode); ?></h2>
         <div id="chat-container">
             <div id="chat-box"></div>
@@ -248,19 +208,18 @@ if ($row = $result->fetch_assoc()) {
             const msg = document.getElementById('message').value;
 
             fetch('sendMessage.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: 'session_id=' + encodeURIComponent(sessionId) +
-                    '&user_name=' + encodeURIComponent(name) +
-                    '&message=' + encodeURIComponent(msg)
-            }).then(() => {
-                document.getElementById('message').value = '';
-                loadMessages();
-            });
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'session_id=' + encodeURIComponent(sessionId) +
+                        '&user_name=' + encodeURIComponent(name) +
+                        '&message=' + encodeURIComponent(msg)
+                })
+                .then(() => {
+                    document.getElementById('message').value = '';
+                    loadMessages();
+                });
         });
     </script>
 </body>
-
-</html>

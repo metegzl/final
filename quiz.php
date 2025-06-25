@@ -1,43 +1,28 @@
 <?php
+include 'connection.php';
 session_start();
-require_once("connection.php");
 
-/* Oturum kodu yoksa */
-if (!isset($_SESSION['current_session_code'])) {
-    echo "<script>
-            alert('Oturum kodu belirtilmedi.');
-            window.location.href = 'createSession.php';
-          </script>";
-    exit;
+if (!isset($_SESSION['uye_id'])) {
+    die("Giriş yapmalısınız.");
 }
 
-$sessionCode = $_SESSION['current_session_code'];
+$createdBy = $_SESSION['uye_id'];
+$session_id = $_GET['session_id'] ?? null;
 
-/* chatwall yetkisini sorgula */
-$stmt = $conn->prepare("SELECT quiz FROM sessions WHERE session_code = ?");
-$stmt->bind_param("s", $sessionCode);
-$stmt->execute();
-$result = $stmt->get_result();
+if (!$session_id) {
+    $stmt = $conn->prepare("SELECT session_code FROM sessions WHERE created_by = ? AND is_active = 1 LIMIT 1");
+    $stmt->bind_param("i", $createdBy);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-/* Sonuç yok veya aktif değilse uyarı göster */
-if ($row = $result->fetch_assoc()) {
-    if ($row['quiz'] != 1) {
-        echo "<script>
-                alert('Bu özellik bu oturumda aktif değil.');
-                window.location.href = 'createSession.php';
-              </script>";
-        exit;
+    if ($row = $result->fetch_assoc()) {
+        $session_id = $row['session_code'];
+    } else {
+        die("Aktif oturum bulunamadı.");
     }
-} else {
-    echo "<script>
-            alert('Geçersiz oturum kodu.');
-            window.location.href = 'createSession.php';
-          </script>";
-    exit;
+    $stmt->close();
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="tr">
 
@@ -103,25 +88,21 @@ if ($row = $result->fetch_assoc()) {
         }
 
         .menu a {
-            font-size: 30px;
-            padding: 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            display: block;
+            width: 100%;
+            padding: 12px;
+            text-align: left;
             border: 3px solid #ccc;
             border-radius: 10px;
-            background: #fff;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
-            box-sizing: border-box;
             text-decoration: none;
+            background-color: #fff;
             font-weight: bold;
-            color: #007BFF;
-            transition: background .2s, box-shadow .2s;
+            box-sizing: border-box;
+            margin-bottom: 3px;
         }
 
         .menu a:hover {
-            background: #e0e0e0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, .35);
+            background-color: #e0e0e0;
         }
 
         .main-container {
@@ -202,10 +183,13 @@ if ($row = $result->fetch_assoc()) {
         <div class="menu">
             <table class="menu">
                 <tr>
-                    <td><a href="chatwall.php">💬 Chat</a></td>
+                    <td><a href="chatwall.php">💬 Chatwall</a></td>
                 </tr>
                 <tr>
                     <td><a href="quiz.php">❔ Quiz</a></td>
+                </tr>
+                <tr>
+                    <td><a href="panic.php">❕ Panic</a></td>
                 </tr>
                 <tr>
                     <td><a href="createSession.php">🎓 Session</a></td>
